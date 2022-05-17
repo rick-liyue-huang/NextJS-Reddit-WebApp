@@ -4,6 +4,8 @@ import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import {useCreateUserWithEmailAndPassword} from "react-firebase-hooks/auth";
 import {auth} from "../../../firebase/clientApp";
+import {FIREBASE_ERRORS} from "../../../firebase/errors";
+
 
 interface RegisterFormProps {
 	email: string;
@@ -29,7 +31,7 @@ const RegisterComponent: React.FC = () => {
 		createUserWithEmailAndPassword,
 		user,
 		loading,
-		error,
+		userError,
 	] = useCreateUserWithEmailAndPassword(auth);
 
 	/**
@@ -84,7 +86,7 @@ const RegisterComponent: React.FC = () => {
 				_focus={{outline: 'none', bg: 'white', border: '1px solid', borderColor: 'green.100'}}
 			/>
 			{
-				formError && <Text color={'red'} fontSize={'10pt'} align={'center'}>{formError}</Text>
+				(formError || userError) && <Text color={'red'} fontSize={'10pt'} align={'center'}>{formError || FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}</Text>
 			}
 			<Button
 				w={'100%'} h={'36px'} type={'submit'} isLoading={loading}

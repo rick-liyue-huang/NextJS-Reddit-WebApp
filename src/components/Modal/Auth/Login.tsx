@@ -2,6 +2,9 @@ import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Input, Button, Flex, Text} from "@chakra-ui/react";
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
+import {useSignInWithEmailAndPassword} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebase/clientApp";
+import {FIREBASE_ERRORS} from "../../../firebase/errors";
 
 interface LoginFormProps {
 	email: string;
@@ -9,6 +12,16 @@ interface LoginFormProps {
 }
 
 const LoginComponent: React.FC = () => {
+
+	/**
+	 * @define login with firebase
+	 */
+	const [
+		signInWithEmailAndPassword,
+		user,
+		loading,
+		error,
+	] = useSignInWithEmailAndPassword(auth);
 
 	const setAuthModalState = useSetRecoilState(authModalState);
 	const [loginForm, setLoginForm] = useState<LoginFormProps>({
@@ -19,8 +32,10 @@ const LoginComponent: React.FC = () => {
 	/**
 	 * @define connect with firebase app
 	 */
-	const handleSubmit = () => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 
+		await signInWithEmailAndPassword(loginForm.email, loginForm.password)
 	}
 
 	/**
@@ -51,7 +66,10 @@ const LoginComponent: React.FC = () => {
 				_hover={{bg: 'white', border: '1px solid', borderColor: 'green.100'}}
 				_focus={{outline: 'none', bg: 'white', border: '1px solid', borderColor: 'green.100'}}
 			/>
-			<Button w={'100%'} h={'36px'} type={'submit'}>Login</Button>
+			<Text color={'red'} textAlign={'center'} fontSize={'10pt'}>
+				{FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS]}
+			</Text>
+			<Button w={'100%'} h={'36px'} type={'submit'} isLoading={loading}>Login</Button>
 			<Flex fontSize={'9pt'} justifyContent={'center'}>
 				<Text mr={2}>Not yet Register?</Text>
 				<Text
