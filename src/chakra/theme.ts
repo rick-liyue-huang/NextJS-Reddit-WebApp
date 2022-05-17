@@ -1,28 +1,33 @@
-
-import '@fontsource/open-sans/greek-ext-500-italic.css'
+// Import `extendTheme`
 import { extendTheme } from "@chakra-ui/react"
-import {ButtonComponent} from "./Button";
+import '@fontsource/open-sans/500-italic.css'
 
-// 2. Call `extendTheme` and pass your custom values
-const theme = extendTheme({
+// Call `extendTheme` and pass your custom values
+// define the global style
+export const theme = extendTheme({
+	// define some special color
 	colors: {
 		brand: {
 			100: "#81E6D9",
 		},
 	},
+	// define the global fonts
 	fonts: {
-		body: "Open Sans, sans-serif"
+		body: 'Open Sans, sans-serif'
 	},
+	// define global styles
 	styles: {
 		global: () => ({
 			body: {
 				bg: 'green.50'
 			}
-		})
-	},
-	components: {
-		Button: ButtonComponent
+		}),
+		// define some special Component
+		components: {
+			// Button
+		}
 	}
 });
 
-export default theme
+
+
