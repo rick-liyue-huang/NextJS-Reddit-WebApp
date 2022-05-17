@@ -1,6 +1,7 @@
 // Import `extendTheme`
 import { extendTheme } from "@chakra-ui/react"
 import '@fontsource/open-sans/500-italic.css'
+import {Button} from "./button";
 
 // Call `extendTheme` and pass your custom values
 // define the global style
@@ -22,10 +23,10 @@ export const theme = extendTheme({
 				bg: 'green.50'
 			}
 		}),
-		// define some special Component
-		components: {
-			// Button
-		}
+	},
+	// define some special Component
+	components: {
+		Button
 	}
 });
 
