@@ -57,6 +57,16 @@ const LoginComponent: React.FC<LoginProps> = () => {
 			<Text textAlign={'center'} color={'red'} fontSize={'10pt'}>{FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS]}</Text>
 			<Button width={'100%'} height={'36px'} type={'submit'} mt={2} mb={2}>Login</Button>
 			<Flex fontSize={'10pt'} justifyContent={'center'}>
+				<Text mr={2}>Forgot password?</Text>
+				<Text
+					color={'green.300'} fontWeight={600} cursor={'pointer'}
+					onClick={() => setAuthModalState(prev => ({
+						...prev,
+						view: 'resetPassword'
+					}))}
+				>Reset</Text>
+			</Flex>
+			<Flex fontSize={'10pt'} justifyContent={'center'}>
 				<Text mr={2}>Have not an account?</Text>
 				<Text
 					color={'green.300'} fontWeight={600} cursor={'pointer'}
