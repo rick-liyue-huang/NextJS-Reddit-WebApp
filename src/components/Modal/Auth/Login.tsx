@@ -1,7 +1,10 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Input, Button, Text, Flex} from "@chakra-ui/react";
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
+import {useSignInWithEmailAndPassword} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebase/clientApp";
+import {FIREBASE_ERRORS} from "../../../firebase/errors";
 
 interface LoginProps {
 
@@ -15,8 +18,17 @@ const LoginComponent: React.FC<LoginProps> = () => {
 		password: ''
 	});
 
+	const [
+		signInWithEmailAndPassword,
+		user,
+		loading,
+		error,
+	] = useSignInWithEmailAndPassword(auth);
+
 	// firebase usage
-	const handleOnSubmit = () => {
+	const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		signInWithEmailAndPassword(loginForm.email, loginForm.password);
 
 	}
 
@@ -42,6 +54,7 @@ const LoginComponent: React.FC<LoginProps> = () => {
 				_placeholder={{color: 'gray.300'}} bg={'gray.50'}
 				_hover={{bg: 'white', border: '1px solid', borderColor: 'green.200'}} _focus={{outline: 'none', bg: 'white', border: '1px solid', borderColor: 'green.200'}}
 			/>
+			<Text textAlign={'center'} color={'red'} fontSize={'10pt'}>{FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS]}</Text>
 			<Button width={'100%'} height={'36px'} type={'submit'} mt={2} mb={2}>Login</Button>
 			<Flex fontSize={'10pt'} justifyContent={'center'}>
 				<Text mr={2}>Have not an account?</Text>
