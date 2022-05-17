@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
 	Modal,
 	ModalOverlay,
@@ -13,10 +13,18 @@ import {useRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import AuthInputsComponent from "./AuthInputs";
 import OAuthButtonsComponent from "./OAuthButtons";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebase/clientApp";
+import ResetPasswordComponent from "./ResetPassword";
 
 const AuthModalComponent: React.FC = () => {
 
 	const [modalState, setModalState] = useRecoilState(authModalState);
+
+	/**
+	 * @define confirm the authentication with firebase
+	 */
+	const [user, loading, error] = useAuthState(auth);
 
 	// close the modal by setting 'open' as false
 	const handleModalClose = () => {
@@ -25,6 +33,12 @@ const AuthModalComponent: React.FC = () => {
 			open: false
 		}))
 	}
+
+	useEffect(() => {
+		// login or register successfully then close modal
+		if (user) handleModalClose();
+		console.log('user: ', user?.email)
+	}, [user])
 
 	return (
 		<>
@@ -44,10 +58,16 @@ const AuthModalComponent: React.FC = () => {
 						<Flex
 							direction={'column'} align={'center'} justify={'center'}
 						>
-							<OAuthButtonsComponent />
-							<Text color={'gray.300'}>OR</Text>
-							<AuthInputsComponent />
-							{/*<ResetPassword />*/}
+							{
+								(modalState.view === 'login' || modalState.view === 'register') ?
+									(<>
+										<OAuthButtonsComponent />
+										<Text color={'gray.300'}>OR</Text>
+										<AuthInputsComponent />
+									</>) :
+									<ResetPasswordComponent />
+							}
+
 						</Flex>
 					</ModalBody>
 
