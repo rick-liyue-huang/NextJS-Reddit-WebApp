@@ -1,7 +1,10 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import {Button, Flex, Input, Text} from "@chakra-ui/react";
+import {useCreateUserWithEmailAndPassword} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebase/clientApp";
+import {FIREBASE_ERRORS} from "../../../firebase/errors";
 
 interface RegisterProps {
 
@@ -15,9 +18,27 @@ const RegisterComponent: React.FC<RegisterProps> = () => {
 		confirmPassword: ''
 	});
 
-	// firebase usage
-	const handleOnSubmit = () => {
+	// connect with firebase
+	const [
+		createUserWithEmailAndPassword,
+		user,
+		loading,
+		userError,
+	] = useCreateUserWithEmailAndPassword(auth);
 
+	const [formError, setFormError] = useState('');
+
+	// firebase usage
+	const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (formError) setFormError('');
+		if (registerForm.password !== registerForm.confirmPassword) {
+			setFormError('password not match');
+			return;
+		}
+
+		createUserWithEmailAndPassword(registerForm.email, registerForm.password);
 	}
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +69,17 @@ const RegisterComponent: React.FC<RegisterProps> = () => {
 				_placeholder={{color: 'gray.300'}} bg={'gray.50'}
 				_hover={{bg: 'white', border: '1px solid', borderColor: 'green.200'}} _focus={{outline: 'none', bg: 'white', border: '1px solid', borderColor: 'green.200'}}
 			/>
-			<Button width={'100%'} height={'36px'} type={'submit'} mt={2} mb={2}>Register</Button>
+			{
+				(formError || userError) && <Text textAlign={'center'} color={'red'} fontSize={'10pt'} >
+					{formError || FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}
+				</Text>
+			}
+			<Button
+				width={'100%'} height={'36px'} type={'submit'}
+				mt={2} mb={2} isLoading={loading}
+			>
+				Register
+			</Button>
 			<Flex fontSize={'10pt'} justifyContent={'center'}>
 				<Text mr={2}>Have an account?</Text>
 				<Text
