@@ -6,13 +6,14 @@ import {
 	ModalHeader,
 	ModalFooter,
 	ModalBody, Flex, Icon,
-	ModalCloseButton, Button, Box, Divider, Text, Input, Stack, Checkbox
+	ModalCloseButton, Button, Box, Divider, Text, Input, Stack, Checkbox, transition
 } from '@chakra-ui/react'
 import {BsFillEyeFill, BsFillPersonFill} from "react-icons/bs";
 import {HiLockClosed} from "react-icons/hi";
-import {doc, getDoc, setDoc, serverTimestamp} from "@firebase/firestore";
+import {doc, getDoc, setDoc, serverTimestamp, runTransaction} from "@firebase/firestore";
 import {auth, fireStore} from "../../../firebase/clientApp";
 import {useAuthState} from "react-firebase-hooks/auth";
+
 
 
 
@@ -67,15 +68,41 @@ const CreateCommunityComponent: React.FC<CreateCommunityProps> = ({open, handleC
 
 			//	create the community document in firebase
 			const communityDocRef = doc(fireStore, 'communities', communityName);
-			const communityDoc = await getDoc(communityDocRef);
 
-			if (communityDoc.exists()) {
-				throw new Error(`sorry, ${communityName} already exists, change another.`) // let catch get the error
-				return;
-			}
+			// deal with database crud
+			await runTransaction(fireStore, async (transition) => {
+				const communityDoc = await transition.get(communityDocRef);  // getDoc
+
+				if (communityDoc.exists()) {
+					throw new Error(`sorry, ${communityName} already exists, change another.`) // let catch get the error
+					return;
+				}
+
+				//	Create community document
+				transition.set(communityDocRef, {
+					//	create id
+					creatorId: user?.uid,
+					//	createAt
+					createdAt: serverTimestamp(),
+					//	number of members
+					numberOfMembers: 1,
+					//	privacy type
+					privacyType: communityType
+				});
+
+			//	create community snippets on user 'collection/document/collection/document'
+				transition.set(doc(fireStore, `users/${user?.uid}/communitySnippets`, communityName), {
+					communityId: communityName,
+					isModerator: true // can be modified by current user
+				})
+
+			})
+
+
+
 
 			//	Create community document
-			await setDoc(communityDocRef, {
+			/*await setDoc(communityDocRef, {
 				//	create id
 				creatorId: user?.uid,
 				//	createAt
@@ -84,7 +111,7 @@ const CreateCommunityComponent: React.FC<CreateCommunityProps> = ({open, handleC
 				numberOfMembers: 1,
 				//	privacy type
 				privacyType: communityType
-			});
+			});*/
 
 		} catch (err: any) {
 			console.log('handleCreateCommunity method is error: ', err)
