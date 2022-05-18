@@ -14,6 +14,7 @@ import {ChevronDownIcon} from "@chakra-ui/icons";
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import {TiHome} from "react-icons/ti";
+import CommunitiesComponent from "./Communities";
 
 
 
@@ -37,7 +38,7 @@ const DirectoryComponent: React.FC = () => {
 				</Flex>
 			</MenuButton>
 			<MenuList>
-				{/*<Communities />*/}
+				<CommunitiesComponent />
 			</MenuList>
 		</Menu>
 	);
