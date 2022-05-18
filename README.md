@@ -19,5 +19,7 @@ the recoil manage the state in atom that can be used throughout the different co
 
 I config the firebase api in .env.local file, and use single file to create firebase app used in different components. the library 'react-firebase-hooks' can connect project with the firebase.
 
+using 'Function' in Firebase by installing `npm install -g firebase-tools`, `firebase init`, and then `firebase deploy --only functions`
+
 
 
