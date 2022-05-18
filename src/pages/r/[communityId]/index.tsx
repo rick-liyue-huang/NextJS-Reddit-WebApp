@@ -5,6 +5,8 @@ import {fireStore} from "../../../firebase/clientApp";
 import {Community} from "../../../atoms/communitiesAtom";
 import safeJsonStringify from 'safe-json-stringify';
 import CommunityNotFoundComponent from "../../../components/Community/NotFound";
+import HeaderComponent from "../../../components/Community/Header";
+import PageContentComponent from "../../../components/Layout/PageContent";
 
 interface CommunityProps {
 	communityData: Community
@@ -18,7 +20,13 @@ const CommunityPage: React.FC<CommunityProps> = ({communityData}) => {
 	}
 
 	return (
-		<div>Welcome to {communityData.id}</div>
+		<>
+			<HeaderComponent communityData={communityData} />
+			<PageContentComponent>
+				<><div>LHS</div><div>LHS</div><div>LHS</div></>
+				<><div>RHS</div></>
+			</PageContentComponent>
+		</>
 	);
 };
 
