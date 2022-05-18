@@ -2,10 +2,9 @@ import React from 'react';
 import {Flex, Button} from "@chakra-ui/react";
 import AuthButtonsComponent from "./AuthButtons";
 import AuthModalComponent from "../Modal/Auth/AuthModal";
-import {signOut, User} from "firebase/auth";
-import {auth} from "../../firebase/clientApp";
-import Icons from "./Icons";
+import {User} from "firebase/auth";
 import IconsComponent from "./Icons";
+import UserMenuComponent from "./UserMenu";
 
 
 interface RightContentProps {
@@ -24,7 +23,7 @@ const RightContentComponent: React.FC<RightContentProps> = ({user}) => {
 						<IconsComponent /> :
 						<AuthButtonsComponent />
 				}
-				{/*<Menu />*/}
+				<UserMenuComponent user={user} />
 			</Flex>
 		</>
 	);
