@@ -2,6 +2,7 @@ import React from 'react';
 import {Community} from "../../atoms/communitiesAtom";
 import {Flex, Box, Icon, Image, Text, Button} from "@chakra-ui/react";
 import {FaReddit} from "react-icons/fa";
+import {useCommunityData} from "../../hooks/useCommunityData";
 
 interface HeaderProps {
 	communityData: Community
@@ -9,7 +10,10 @@ interface HeaderProps {
 
 const HeaderComponent: React.FC<HeaderProps> = ({communityData}) => {
 
-	const isJoined = false; // read from our community snippets
+	// using global hooks
+	const {communityStateVal, handleToggleJoinCommunity} = useCommunityData();
+
+	const isJoined = !!communityStateVal.mySnippets.find(item => item.communityId === communityData.id); // read from our community snippets
 
 	return (
 		<Flex
@@ -34,7 +38,7 @@ const HeaderComponent: React.FC<HeaderProps> = ({communityData}) => {
 						</Flex>
 						<Button
 							variant={isJoined ? 'outline' : 'solid'} h={'30px'} pr={6} pl={6}
-							onClick={() => {}}
+							onClick={() => handleToggleJoinCommunity(communityData, isJoined)}
 						>{isJoined ? 'Joined' : 'Join'}</Button>
 					</Flex>
 				</Flex>
