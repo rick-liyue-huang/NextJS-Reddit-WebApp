@@ -1,10 +1,12 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {Input, Button, Flex, Text} from "@chakra-ui/react";
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import {useCreateUserWithEmailAndPassword} from "react-firebase-hooks/auth";
-import {auth} from "../../../firebase/clientApp";
+import {auth, fireStore} from "../../../firebase/clientApp";
 import {FIREBASE_ERRORS} from "../../../firebase/errors";
+import {User} from "firebase/auth";
+import {addDoc, collection} from "@firebase/firestore";
 
 
 interface RegisterFormProps {
@@ -61,6 +63,17 @@ const RegisterComponent: React.FC = () => {
 			[e.target.name]: e.target.value
 		}))
 	}
+
+	// same as the firebase functions named 'createUserDocument' in 'functions/src/index.ts'
+	const createUserDocument = async (user: User) => {
+		await addDoc(collection(fireStore, 'users'), JSON.parse(JSON.stringify(user)))
+	}
+
+	useEffect(() => {
+		if (user) {
+			createUserDocument(user.user)
+		}
+	}, [user])
 
 	return (
 		<form onSubmit={handleSubmit} >

@@ -23,7 +23,6 @@ interface CreateCommunityProps {
 
 const CreateCommunityComponent: React.FC<CreateCommunityProps> = ({open, handleClose}) => {
 
-
 	// one tip to deal with the character number
 	// deal with the input
 	const [communityName, setCommunityName] = useState('');
