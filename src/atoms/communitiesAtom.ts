@@ -1,0 +1,14 @@
+
+import {atom} from "recoil";
+import {Timestamp} from "@firebase/firestore";
+
+export interface Community {
+	id: string;
+	creatorId: string;
+	createdAt?: Timestamp;
+	numberOfMembers: number;
+	privacyType: 'public' | 'restricted' | 'private';
+	imageUrl?: string;
+}
+
+

@@ -78,7 +78,7 @@ const CreateCommunityComponent: React.FC<CreateCommunityProps> = ({open, handleC
 					return;
 				}
 
-				//	Create community document
+				//	Create community document, match with atom
 				transition.set(communityDocRef, {
 					//	create id
 					creatorId: user?.uid,
