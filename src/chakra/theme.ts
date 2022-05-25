@@ -1,12 +1,13 @@
 // 1. Import `extendTheme`
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/aclonica"
+import {ButtonComponent} from "./button";
 
 // 2. Call `extendTheme` and pass your custom values
 export const theme = extendTheme({
 	colors: {
 		brand: {
-			100: "#38A169",
+			100: "#48BB78",
 		},
 	},
 	fonts: {
@@ -20,6 +21,6 @@ export const theme = extendTheme({
 		})
 	},
 	components: {
-		// Button
+		Button: ButtonComponent
 	}
 })
