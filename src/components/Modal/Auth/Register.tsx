@@ -4,6 +4,7 @@ import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import {useCreateUserWithEmailAndPassword} from "react-firebase-hooks/auth";
 import {auth} from "../../../firebase/clientApp";
+import {FIREBASE_ERRORS} from "../../../firebase/errors";
 
 export interface RegisterFormProps {
 	email: string;
@@ -27,6 +28,7 @@ const RegisterComponent: React.FC = () => {
 		loading,
 		userError,
 	] = useCreateUserWithEmailAndPassword(auth);
+
 
 	const [formError, setFormError] = useState('');
 
@@ -78,7 +80,7 @@ const RegisterComponent: React.FC = () => {
 				_focus={{bg: 'white', border: '1px solid', borderColor: 'brand.100'}}
 			/>
 			{
-				formError && <Text textAlign={'center'} color={'red'} fontSize={'10pt'}>{formError}</Text>
+				(formError || userError) && <Text textAlign={'center'} color={'red'} fontSize={'10pt'}>{formError || FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}</Text>
 			}
 			<Button isLoading={loading}
 				w={'100%'} h={'36px'} type={'submit'} mt={2}
@@ -86,7 +88,7 @@ const RegisterComponent: React.FC = () => {
 			<Flex fontSize={'9pt'} justifyContent={'center'} mt={2}>
 				<Text mr={1}>Already joined?</Text>
 				<Text
-					color={'green.200'} fontWeight={700} cursor={'pointer'}
+					color={'green.200'} fontWeight={700} cursor={'pointer'} mb={2}
 					onClick={() => setAuthModalState(prev => ({
 						...prev,
 						view: 'login'
