@@ -1,7 +1,9 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Input, Button, Flex, Text} from "@chakra-ui/react";
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
+import {useCreateUserWithEmailAndPassword} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebase/clientApp";
 
 export interface RegisterFormProps {
 	email: string;
@@ -18,8 +20,28 @@ const RegisterComponent: React.FC = () => {
 		confirmPassword: ''
 	});
 
-	const handleSubmit = () => {
+	// connect with firebase
+	const [
+		createUserWithEmailAndPassword,
+		user,
+		loading,
+		userError,
+	] = useCreateUserWithEmailAndPassword(auth);
 
+	const [formError, setFormError] = useState('');
+
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (formError) {
+			setFormError('')
+		}
+
+		if (registerForm.password !== registerForm.confirmPassword) {
+			setFormError('Passwords don not match');
+			return;
+		}
+		await createUserWithEmailAndPassword(registerForm.email, registerForm.password);
 	}
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +77,10 @@ const RegisterComponent: React.FC = () => {
 				_hover={{bg: 'white', border: '1px solid', borderColor: 'brand.100'}}
 				_focus={{bg: 'white', border: '1px solid', borderColor: 'brand.100'}}
 			/>
-			<Button
+			{
+				formError && <Text textAlign={'center'} color={'red'} fontSize={'10pt'}>{formError}</Text>
+			}
+			<Button isLoading={loading}
 				w={'100%'} h={'36px'} type={'submit'} mt={2}
 			>Register</Button>
 			<Flex fontSize={'9pt'} justifyContent={'center'} mt={2}>
