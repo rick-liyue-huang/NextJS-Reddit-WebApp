@@ -167,4 +167,29 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 
 export default CreateCommunityModal;
 
+/*
+// structure between user and community
+const USER = {
+	id: 'userId1',
+
+//	subcollection
+	communitySnippets: [
+		{
+			communityId: 'commId1'
+		},
+		{
+			communityId: 'commId2'
+		},
+		{
+			communityId: 'commId3'
+		}
+	]
+}
+
+const COMMUNITY = {
+	id: 'commId',
+	numberOfMembers: 'xxxxxxx'
+}
+
+*/
 
