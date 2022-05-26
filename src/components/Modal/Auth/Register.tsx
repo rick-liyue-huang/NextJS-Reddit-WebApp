@@ -1,10 +1,12 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {Input, Button, Flex, Text} from "@chakra-ui/react";
 import {useSetRecoilState} from "recoil";
 import {authModalState} from "../../../atoms/authModalAtom";
 import {useCreateUserWithEmailAndPassword} from "react-firebase-hooks/auth";
-import {auth} from "../../../firebase/clientApp";
+import {auth, fireStore} from "../../../firebase/clientApp";
 import {FIREBASE_ERRORS} from "../../../firebase/errors";
+import {User} from "firebase/auth";
+import {addDoc, collection, setDoc, doc} from "@firebase/firestore";
 
 export interface RegisterFormProps {
 	email: string;
@@ -24,7 +26,7 @@ const RegisterComponent: React.FC = () => {
 	// connect with firebase
 	const [
 		createUserWithEmailAndPassword,
-		user,
+		userCred,
 		loading,
 		userError,
 	] = useCreateUserWithEmailAndPassword(auth);
@@ -53,6 +55,19 @@ const RegisterComponent: React.FC = () => {
 			[e.target.name]: e.target.value
 		}));
 	}
+
+	// without using the cloud functions
+	// same as the cloud functions
+	const createUserDocument = async (user: User) => {
+		// await addDoc(collection(fireStore, 'users'), JSON.parse(JSON.stringify(user)));
+		await setDoc(doc(fireStore, 'users', user.uid), JSON.parse(JSON.stringify(user)));
+	}
+
+	useEffect(() => {
+		if (userCred) {
+			createUserDocument(userCred.user);
+		}
+	}, [userCred]);
 
 	return (
 		<form onSubmit={handleSubmit}>
