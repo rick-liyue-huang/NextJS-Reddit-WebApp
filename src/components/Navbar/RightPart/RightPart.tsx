@@ -2,11 +2,14 @@ import React from 'react';
 import {Flex, Button} from "@chakra-ui/react";
 import AuthButtonsComponent from "./AuthButtons";
 import AuthModalComponent from "../../Modal/Auth/AuthModal";
-import {signOut} from "@firebase/auth";
-import {auth} from "../../../firebase/clientApp";
+import IconsComponent from "./Icons";
+
+interface User {
+
+}
 
 interface RightPartProps {
-	user: any;
+	user?: User | null;
 }
 
 const RightPartComponent: React.FC<RightPartProps> = ({user}) => {
@@ -16,7 +19,9 @@ const RightPartComponent: React.FC<RightPartProps> = ({user}) => {
 			<AuthModalComponent />
 			<Flex justify={'center'} align={'center'} >
 				{
-					user ? <Button onClick={() => signOut(auth)}>LOGOUT</Button> : <AuthButtonsComponent />
+					user ?
+						<IconsComponent /> :
+						<AuthButtonsComponent />
 				}
 			</Flex>
 		</>
