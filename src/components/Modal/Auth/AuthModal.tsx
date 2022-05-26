@@ -7,6 +7,7 @@ import AuthInputsComponent from "./AuthInputs";
 import OAuthButtonsComponent from "./OAuthButtons";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth} from "../../../firebase/clientApp";
+import ResetPasswordComponent from "./ResetPassword";
 
 
 const AuthModalComponent: React.FC = () => {
@@ -22,6 +23,7 @@ const AuthModalComponent: React.FC = () => {
 		}))
 	};
 
+	// after login or register, close modal
 	useEffect(() => {
 		if (user) handleModalClose();
 		console.log('user: ', user);
@@ -46,10 +48,17 @@ const AuthModalComponent: React.FC = () => {
 							direction={'column'} align={'center'} justify={'center'}
 							w={'80%'}
 						>
-							<OAuthButtonsComponent />
-							<Text color={'gray.300'} fontWeight={500}>OR</Text>
-							<AuthInputsComponent />
-							{/*<ResetPassword />*/}
+							{
+								(modalState.view === 'login' || modalState.view === 'register') ? (
+									<>
+										<OAuthButtonsComponent />
+										<Text color={'gray.300'} fontWeight={500}>OR</Text>
+										<AuthInputsComponent />
+									</>
+								) : (
+									<ResetPasswordComponent />
+								)
+							}
 						</Flex>
 					</ModalBody>
 				</ModalContent>
