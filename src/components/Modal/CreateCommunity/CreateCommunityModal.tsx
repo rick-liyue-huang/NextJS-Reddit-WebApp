@@ -3,7 +3,7 @@ import {Modal, ModalBody, ModalCloseButton, ModalContent, Stack, ModalFooter, Mo
 	Text, Input, Checkbox, Flex, Icon} from "@chakra-ui/react";
 import {BsFillEyeFill, BsFillPersonFill} from "react-icons/bs";
 import {HiLockClosed} from "react-icons/hi";
-import {doc, getDoc, serverTimestamp, setDoc} from '@firebase/firestore';
+import {doc, getDoc, runTransaction, serverTimestamp, setDoc} from '@firebase/firestore';
 import {auth, fireStore} from '../../../firebase/clientApp';
 import {useAuthState} from "react-firebase-hooks/auth";
 
@@ -54,15 +54,46 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 			//	create the community document in fireStore
 			//	check the name is not taken
 			const communityDocRef = doc(fireStore, 'communites', communityName);
-			const communityDoc = await getDoc(communityDocRef);
+
+			// transaction means read and write the document/collection
+			await runTransaction(fireStore, async (transiction) => {
+				const communityDoc = await transiction.get(communityDocRef);
+
+				if (communityDoc.exists()) {
+					// let try catch get the error message
+					throw new Error(`sorry, the community name r/${communityName} exists, try another please.`)
+					// return;
+				}
+
+				//	if valid, create one
+				transiction.set(communityDocRef, {
+					//	create id
+					//	created at
+					//	numberOfMembers
+					// 	privacyType
+					creatorId: user?.uid,
+					createdAt: serverTimestamp(),
+					numberOfMembers: 1,
+					privacyType: communityType
+				});
+
+			//	create communitySnippets on user 'collection/document/collection/document' format
+				transiction.set(doc(fireStore, `users/${user?.uid}/communitySnippets`, communityName), {
+					communityId: communityName,
+					isModerator: true
+				});
+
+			})
+
+			/*const communityDoc = await getDoc(communityDocRef);
 
 			if (communityDoc.exists()) {
 				// let try catch get the error message
 				throw new Error(`sorry, the community name r/${communityName} exists, try another please.`)
 				// return;
-			}
+			}*/
 
-			//	if valid, create one
+			/*//	if valid, create one
 			await setDoc(communityDocRef, {
 				//	create id
 				//	created at
@@ -72,7 +103,7 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 				createdAt: serverTimestamp(),
 				numberOfMembers: 1,
 				privacyType: communityType
-			});
+			});*/
 
 		} catch (err: any) {
 			console.log('handleCreateCommunity error: ', err);
