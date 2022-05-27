@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {Community} from "../../atoms/communitiesAtom";
 import {Flex, Box, Icon, Image, Text, Button} from "@chakra-ui/react";
 import {FaReddit} from "react-icons/fa";
+import {useCommunityData} from "../../hooks/useCommunityData";
+
 
 interface HeaderProps {
 	communityData: Community
@@ -11,6 +13,7 @@ const CommunityHeaderComponent: React.FC<HeaderProps> = ({communityData}) => {
 
 	// read from out communitySnippet
 	const isJoined = false;
+	const {communityStateValue, joinCommunity, leaveCommunity} = useCommunityData();
 
 	return (
 		<Flex

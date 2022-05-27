@@ -8,6 +8,8 @@ interface PageContentProps {
 const PageContentComponent: React.FC<PageContentProps> = ({children}) => {
 
 	console.log(children)
+
+	// match with the parent layout, with array of two elements
 	return (
 		<Flex
 			justify={'center'} p={'16px 0'} border={'1px solid red'}
