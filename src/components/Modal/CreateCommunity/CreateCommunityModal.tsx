@@ -43,8 +43,8 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 	//	validate the community
 		const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
 		if (format.test(communityName) || communityName.length < 3) {
-			setError("Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.");
-			return;
+			return setError("Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.");
+
 		}
 
 		// this is async method, so need loading status
@@ -53,7 +53,7 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 		try {
 			//	create the community document in fireStore
 			//	check the name is not taken
-			const communityDocRef = doc(fireStore, 'communites', communityName);
+			const communityDocRef = doc(fireStore, 'communities', communityName);
 
 			// transaction means read and write the document/collection
 			await runTransaction(fireStore, async (transiction) => {
