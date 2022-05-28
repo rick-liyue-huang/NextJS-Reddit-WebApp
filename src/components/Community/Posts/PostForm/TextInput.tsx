@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {Stack, Input, Textarea, Flex, Button} from "@chakra-ui/react";
 
 interface TextInputProps {
@@ -12,6 +12,7 @@ interface TextInputProps {
 }
 
 const TextInputComponent: React.FC<TextInputProps> = ({textInputs, loading, handleCreatePost, onChange}) => {
+
 	return (
 		<Stack
 			spacing={3} w={'100%'}
@@ -36,8 +37,8 @@ const TextInputComponent: React.FC<TextInputProps> = ({textInputs, loading, hand
 			/>
 			<Flex justify={'flex-end'}>
 				<Button
-					h={'34px'} p={'0 30px'}
-					// disabled={}
+					h={'34px'} p={'0 30px'} isLoading={loading}
+					disabled={!textInputs.title}
 					onClick={() => {}} >Post</Button>
 			</Flex>
 		</Stack>
