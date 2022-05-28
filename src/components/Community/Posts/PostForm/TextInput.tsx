@@ -39,7 +39,7 @@ const TextInputComponent: React.FC<TextInputProps> = ({textInputs, loading, hand
 				<Button
 					h={'34px'} p={'0 30px'} isLoading={loading}
 					disabled={!textInputs.title}
-					onClick={() => {}} >Post</Button>
+					onClick={() => handleCreatePost()} >Post</Button>
 			</Flex>
 		</Stack>
 	);
