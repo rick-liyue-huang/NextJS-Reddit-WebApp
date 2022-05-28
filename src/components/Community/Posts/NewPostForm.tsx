@@ -178,7 +178,7 @@ const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
 				}
 			</Flex>
 			{
-				true && (
+				error && (
 					<Alert status='error' color={'gray.500'} fontSize={'10pt'} fontWeight={300}>
 						<AlertIcon />
 						<Text mr={2}>Create post error</Text>
