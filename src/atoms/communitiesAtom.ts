@@ -11,7 +11,7 @@ export interface Community {
 }
 
 // in order to let the whole project know the community under login user, we set in recoil
-interface CommunitySnippet {
+export interface CommunitySnippet {
 	communityId: string;
 	isModerator?: boolean;
 	imageUrl?: string;

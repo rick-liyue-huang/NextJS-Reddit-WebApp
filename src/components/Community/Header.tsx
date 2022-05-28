@@ -11,9 +11,9 @@ interface HeaderProps {
 
 const CommunityHeaderComponent: React.FC<HeaderProps> = ({communityData}) => {
 
+	const {communityStateValue, handleToggleJoinCommunity} = useCommunityData();
 	// read from out communitySnippet
-	const isJoined = false;
-	const {communityStateValue, joinCommunity, leaveCommunity} = useCommunityData();
+	const isJoined = !!communityStateValue.mySnippets.find(item => item.communityId === communityData.id);
 
 	return (
 		<Flex
@@ -41,7 +41,7 @@ const CommunityHeaderComponent: React.FC<HeaderProps> = ({communityData}) => {
 						</Flex>
 						<Button
 							h={'30px'} variant={isJoined ? 'outline' : 'solid'}
-							pr={6} pl={6} onClick={() => {}}
+							pr={6} pl={6} onClick={() => handleToggleJoinCommunity(communityData, isJoined)}
 						>{isJoined ? 'Joined' : 'Join'}</Button>
 					</Flex>
 				</Flex>
