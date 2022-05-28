@@ -8,6 +8,7 @@ import NotFound from "../../../components/Community/NotFound";
 import CommunityNotFound from "../../../components/Community/NotFound";
 import CommunityHeaderComponent from "../../../components/Community/Header";
 import PageContentComponent from "../../../components/Layout/PageContent";
+import CreatePostLinkComponent from "../../../components/Community/CreatePostLink";
 
 interface CommunityPageProps {
 	communityData: Community
@@ -28,7 +29,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({communityData}) => {
 			<CommunityHeaderComponent communityData={communityData} />
 			<PageContentComponent>
 				<>
-					<div>LHS</div>
+					<CreatePostLinkComponent />
 				</>
 				<><div>RHS</div></>
 			</PageContentComponent>

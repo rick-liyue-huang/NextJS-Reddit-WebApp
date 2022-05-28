@@ -79,6 +79,7 @@ export const useCommunityData = () => {
 
 			//	update the number of members
 			batch.update(doc(fireStore, 'communities', communityData.id), {
+				// TODO: can increase unlimited
 				numberOfMembers: increment(1),
 			});
 
