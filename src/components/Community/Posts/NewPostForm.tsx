@@ -105,14 +105,16 @@ const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
 
 			}
 
+			// only successfully
+			//	redirect the user back to the communityPage
+			router.back();
+
 		} catch (err: any) {
 			console.log('handlecreaetepost error: ', err.message);
 			setError(true);
 		}
 		setLoading(false);
 
-	//	redirect the user back to the communityPage
-		router.back();
 	}
 
 	// transfer the func to ImageUpload

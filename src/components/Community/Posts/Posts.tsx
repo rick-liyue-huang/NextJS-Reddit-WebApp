@@ -1,7 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Community} from "../../../atoms/communitiesAtom";
 import {collection, getDocs, orderBy, query, where} from "@firebase/firestore";
-import {fireStore} from "../../../firebase/clientApp";
+import {auth, fireStore} from "../../../firebase/clientApp";
+import {usePosts} from "../../../hooks/usePosts";
+import {Post} from "../../../atoms/postsAtom";
+import PostItemComponent from "./PostItem";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {Stack} from "@chakra-ui/react";
+import PostLoaderComponent from "./PostLoader";
 
 interface PostsProps {
 	communityData: Community;
@@ -10,8 +16,17 @@ interface PostsProps {
 const PostsComponent: React.FC<PostsProps> = ({communityData}) => {
 
 	const [loading, setLoading] = useState(false);
+	// manage post state in global
+	const {
+		postValue,
+		setPostValue,
+		handleDeletePost,
+		handleVote,
+		handleSelectPost
+	} = usePosts();
 
 	// useAuthState
+	const [user] = useAuthState(auth);
 
 	const getPosts = async () => {
 
@@ -30,6 +45,11 @@ const PostsComponent: React.FC<PostsProps> = ({communityData}) => {
 
 			console.log('posts', posts);
 
+			// we query the posts and set in global recoil post state.
+			setPostValue(prev => ({
+				...prev, posts: posts as Post[]
+			}));
+
 		} catch (err: any) {
 			console.log('getPosts error: ', err.message);
 		}
@@ -41,9 +61,31 @@ const PostsComponent: React.FC<PostsProps> = ({communityData}) => {
 	}, [])
 
 	return (
-		<div>
-			Posts
-		</div>
+		<>
+			{
+				loading ? (
+					<PostLoaderComponent />
+				) : (
+					<Stack>
+						{
+							postValue.posts.map(item => (
+								<PostItemComponent
+									key={item.id}
+									post={item}
+									userIsCreator={user?.uid === item.creatorId}
+									userVoteValue={undefined}
+									handleVote={handleVote}
+									handleSelectPost={handleSelectPost}
+									handleDeletePost={handleDeletePost}
+								/>
+							))
+						}
+					</Stack>
+				)
+			}
+
+		</>
+
 	);
 };
 

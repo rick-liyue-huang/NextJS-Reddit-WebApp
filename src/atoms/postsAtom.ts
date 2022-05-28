@@ -11,7 +11,7 @@ export interface Post {
 	body: string;
 	numberOfComments: number;
 	voteStatus: number;
-	imgUrl?: string;
+	imageUrl?: string;
 	createdAt: Timestamp;
 	communityImageUrl?: string;
 }
