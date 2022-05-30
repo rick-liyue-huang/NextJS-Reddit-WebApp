@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, MouseEvent} from 'react';
 import {Flex, Icon, Text, Stack, Image, Skeleton, Spinner, Alert, AlertIcon} from "@chakra-ui/react";
 import {Post} from "../../../atoms/postsAtom";
 import moment from "moment";
-import { NextRouter } from "next/router";
+import {NextRouter, useRouter} from "next/router";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
 import { FaReddit } from "react-icons/fa";
@@ -19,9 +19,9 @@ interface PostItemProps {
 	post: Post;
 	userIsCreator: boolean;
 	userVoteValue?: number;
-	handleVote: (post: Post, vote: number, communityId: string) => void;
+	handleVote: (event: MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, communityId: string) => void;
 	handleDeletePost: (post: Post) => Promise<boolean>
-	handleSelectPost: () => void;
+	handleSelectPost?: (post: Post) => void;
 }
 
 const PostItemComponent: React.FC<PostItemProps> = ({
@@ -36,9 +36,17 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 	const [loadingImage, setLoadingImage] = useState(true);
 	const [error, setError] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
+	const router = useRouter();
+
+
+	// confirm it is singlepostpage or post in community page
+	const singlePost = !handleSelectPost;
 
 	// delete the post
-	const handleDelete = async () => {
+	const handleDelete = async (event: MouseEvent<HTMLDivElement, MouseEvent>) => {
+
+		event.stopPropagation();
+
 		setDeleteLoading(true);
 		try {
 			const success = await handleDeletePost(post);
@@ -47,31 +55,48 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 				throw new Error('Fail to delete post here');
 			}
 			console.log('post was successfully deleted');
+
+			if (singlePost) {
+				router.push(`/r/${post.communityId}`)
+			}
+
 		} catch (err: any) {
 			setError(err.message);
 		}
 		setDeleteLoading(false);
 	}
 
+	// @ts-ignore
 	return (
 		<Flex
-			border={'1px solid'} bg={'white'} borderColor={'green.300'} borderRadius={3}
-			_hover={{borderColor: 'green.500'}} cursor={'pointer'}
-			onClick={handleSelectPost}
+			border={'1px solid'} bg={'white'}
+			borderColor={singlePost ? 'white' : 'green.300'}
+			borderRadius={singlePost ? '5px 5px 0 0' : '3px'}
+			_hover={{borderColor: singlePost ? 'none' : 'green.500'}} cursor={singlePost ? 'unset' : 'pointer'}
+			onClick={() => handleSelectPost && handleSelectPost(post)}
 		>
 			<Flex
-				direction={'column'} align={'center'} p={2} bg={'green.100'} w={'40px'}
+				direction={'column'} align={'center'} p={2} bg={singlePost ? 'none' : 'green.100'} w={'40px'}
+				borderRadius={singlePost ? '0' : '3px 3px 0 0'}
 			>
 				<Icon
 					as={userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleSharp}
 					color={userVoteValue === 1 ? 'brand.100' : 'gray.400'}
-					fontSize={22} onClick={() => handleVote(post, 1, post.communityId)} cursor={'pointer'}
+					fontSize={22} onClick={(event) => {
+					// @ts-ignore
+					handleVote(event, post, 1, post.communityId)
+					}
+				} cursor={'pointer'}
 				/>
 				<Text>{post.voteStatus}</Text>
 				<Icon
 					as={userVoteValue === -1 ? IoArrowDownCircleSharp : IoArrowDownCircleSharp}
 					color={userVoteValue === -1 ? 'green.200' : 'gray.400'}
-					fontSize={22} onClick={() => handleVote(post, -1, post.communityId)} cursor={'pointer'}
+					fontSize={22} onClick={(e) => {
+					// @ts-ignore
+					handleVote(e, post, -1, post.communityId)
+					}
+				} cursor={'pointer'}
 				/>
 			</Flex>
 			<Flex
@@ -138,7 +163,11 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 							<Flex
 								align={'center'} p={'8px 10px'} borderRadius={3}
 								_hover={{color: 'white', bg: 'green.200'}} cursor={'pointer'}
-								onClick={handleDelete}
+								onClick={(e) => {
+
+									// @ts-ignore
+									handleDelete(e)
+								}}
 							>
 								{
 									deleteLoading ? (

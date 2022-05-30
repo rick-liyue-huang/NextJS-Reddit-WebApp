@@ -3,8 +3,9 @@ import {useRecoilState, useSetRecoilState} from "recoil";
 import {Community, CommunitySnippet, communityState} from "../atoms/communitiesAtom";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth, fireStore} from "../firebase/clientApp";
-import {collection, getDocs, writeBatch, doc, increment} from "@firebase/firestore";
+import {collection, getDocs, writeBatch, doc, increment, getDoc} from "@firebase/firestore";
 import {authModalState} from "../atoms/authModalAtom";
+import {useRouter} from "next/router";
 
 
 /**
@@ -18,6 +19,7 @@ export const useCommunityData = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const setAuthModalState = useSetRecoilState(authModalState);
+	const router = useRouter();
 
 	// switch between the joined and un-joined state
 	const handleToggleJoinCommunity = async (communityData: Community, isJoined: boolean) => {
@@ -132,6 +134,22 @@ export const useCommunityData = () => {
 		setLoading(false);
 	}
 
+	// same as fetchPost in pid.txt, to solve the problem of refresh the single post page and no about component
+	const getCommunityData = async (communityId: string) => {
+		try {
+
+			const communityDoRef = doc(fireStore, 'communities', communityId);
+			const communityDoc = await getDoc(communityDoRef);
+			setCommunityStateValue(prev => ({
+				...prev,
+				currentCommunity: {id: communityDoc.id, ...communityDoc.data()} as Community
+			}));
+
+		} catch (err: any) {
+			console.log('getCommunityData error: ', err.message)
+		}
+	}
+
 	useEffect(() => {
 		if (!user) {
 			setCommunityStateValue(prev => ({
@@ -141,7 +159,15 @@ export const useCommunityData = () => {
 			return
 		}
 		getMySnippets()
-	}, [user])
+	}, [user]);
+
+	useEffect(() => {
+		const {communityId} = router.query;
+
+		if (communityId && !communityStateValue.currentCommunity) {
+			getCommunityData(communityId as string);
+		}
+	}, [router.query, communityStateValue.currentCommunity]);
 
 	return {
 		communityStateValue,

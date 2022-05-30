@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, MouseEvent} from 'react';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {Post, postState, PostVote} from "../atoms/postsAtom";
 import {auth, fireStore, storage} from "../firebase/clientApp";
@@ -7,6 +7,7 @@ import {collection, deleteDoc, doc, getDocs, query, where, writeBatch} from "@fi
 import {useAuthState} from "react-firebase-hooks/auth";
 import {communityState} from "../atoms/communitiesAtom";
 import {authModalState} from "../atoms/authModalAtom";
+import {useRouter} from "next/router";
 
 export const usePosts = () => {
 
@@ -14,8 +15,12 @@ export const usePosts = () => {
 	const [postValue, setPostValue] = useRecoilState(postState);
 	const {currentCommunity} = useRecoilValue(communityState);
 	const setAuthModalState = useSetRecoilState(authModalState);
+	const router = useRouter();
 
-	const handleVote = async (post: Post, vote: number, communityId: string) => {
+	const handleVote = async (e: MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, communityId: string) => {
+
+		// do not router jump when click vote
+		e.stopPropagation();
 
 		// check the user auth state, if not, open the auth modal
 		if (!user?.uid) {
@@ -99,6 +104,15 @@ export const usePosts = () => {
 				postVotes: updatedPostVotes,
 			}));
 
+
+			// deal with the single post page voting logic
+			if (postValue.selectedPost) {
+				setPostValue(prev => ({
+					...prev,
+					selectedPost: updatedPost
+				}));
+			}
+
 			// update post document
 			const postRef = doc(fireStore, 'posts', post.id!);
 			batch.update(postRef, {
@@ -114,7 +128,15 @@ export const usePosts = () => {
 	}
 
 
-	const handleSelectPost = () => {}
+	// will show the single post page
+	const handleSelectPost = (post: Post) => {
+		setPostValue(prev => ({
+			...prev,
+			selectedPost: post
+		}));
+
+		router.push(`/r/${post.communityId}/comments/${post.id}`);
+	}
 
 	// delete the post from firebase and global state
 	const handleDeletePost = async (post: Post): Promise<boolean> => {

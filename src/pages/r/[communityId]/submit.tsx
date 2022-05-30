@@ -6,13 +6,16 @@ import {useAuthState} from "react-firebase-hooks/auth";
 import {auth} from "../../../firebase/clientApp";
 import {useRecoilValue} from "recoil";
 import {communityState} from "../../../atoms/communitiesAtom";
+import {useCommunityData} from "../../../hooks/useCommunityData";
+import AboutComponent from "../../../components/Community/About";
 
 // realize to create post here
 
 const SubmitPostPage: React.FC = () => {
 
 	const [user] = useAuthState(auth);
-	const communityStateValue = useRecoilValue(communityState);
+	// const communityStateValue = useRecoilValue(communityState);
+	const {communityStateValue} = useCommunityData();
 
 	// confirm the current community value is global
 	console.log('current communityStateValue: ', communityStateValue);
@@ -26,7 +29,10 @@ const SubmitPostPage: React.FC = () => {
 				{ user && <NewPostFormComponent user={user} /> }
 			</>
 			<>
-				{/*<About />*/}
+				{communityStateValue.currentCommunity &&
+					<AboutComponent communityData={communityStateValue.currentCommunity} />
+				}
+
 			</>
 		</PageContentComponent>
 	);
