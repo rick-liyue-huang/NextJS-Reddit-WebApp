@@ -13,6 +13,7 @@ import {useRouter} from "next/router";
 import {addDoc, collection, serverTimestamp, Timestamp, updateDoc} from "@firebase/firestore";
 import {fireStore, storage} from "../../../firebase/clientApp";
 import {getDownloadURL, ref, uploadString} from "@firebase/storage";
+import {useSelectFile} from "../../../hooks/useSelectFile";
 
 
 interface NewPostFormProps {
@@ -59,7 +60,10 @@ const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
 		title: '',
 		body: ''
 	});
-	const [selectedFile, setSelectedFile] = useState<string>('');
+	// use custom hook 'useSelectFile'
+	// const [selectedFile, setSelectedFile] = useState<string>('');
+	const {setSelectedFile, selectedFile, handleSelectImage} = useSelectFile();
+
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
 	const router = useRouter();
@@ -118,6 +122,7 @@ const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
 	}
 
 	// transfer the func to ImageUpload
+	/*
 	const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
 
 		// the typical method to upload the file to server
@@ -133,6 +138,8 @@ const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
 			}
 		}
 	}
+	*/
+
 
 	// transfer the func to TextInput
 	const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
