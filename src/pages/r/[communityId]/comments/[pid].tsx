@@ -9,6 +9,8 @@ import {useRouter} from "next/router";
 import {doc, getDoc} from "@firebase/firestore";
 import {Post} from "../../../../atoms/postsAtom";
 import {useCommunityData} from "../../../../hooks/useCommunityData";
+import CommentsComponent from "../../../../components/Community/Posts/Comments/Comments";
+import {User} from "firebase/auth";
 
 const SinglePostPage: React.FC  = () => {
 
@@ -57,7 +59,10 @@ const SinglePostPage: React.FC  = () => {
 					)
 				}
 
-				{/*<Comments />*/}
+				<CommentsComponent
+					user={user as User} selectedPost={postValue.selectedPost}
+					communityId={postValue.selectedPost?.communityId as string}
+				/>
 			</>
 			<>
 				{

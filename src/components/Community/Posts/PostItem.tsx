@@ -88,7 +88,7 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 					}
 				} cursor={'pointer'}
 				/>
-				<Text>{post.voteStatus}</Text>
+				<Text fontSize={'9pt'} color={'gray.600'} >{post.voteStatus}</Text>
 				<Icon
 					as={userVoteValue === -1 ? IoArrowDownCircleSharp : IoArrowDownCircleSharp}
 					color={userVoteValue === -1 ? 'green.200' : 'gray.400'}
