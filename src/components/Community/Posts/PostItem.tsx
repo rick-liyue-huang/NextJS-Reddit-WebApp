@@ -19,7 +19,7 @@ interface PostItemProps {
 	post: Post;
 	userIsCreator: boolean;
 	userVoteValue?: number;
-	handleVote: () => {};
+	handleVote: (post: Post, vote: number, communityId: string) => void;
 	handleDeletePost: (post: Post) => Promise<boolean>
 	handleSelectPost: () => void;
 }
@@ -65,13 +65,13 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 				<Icon
 					as={userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleSharp}
 					color={userVoteValue === 1 ? 'brand.100' : 'gray.400'}
-					fontSize={22} onClick={handleVote} cursor={'pointer'}
+					fontSize={22} onClick={() => handleVote(post, 1, post.communityId)} cursor={'pointer'}
 				/>
 				<Text>{post.voteStatus}</Text>
 				<Icon
 					as={userVoteValue === -1 ? IoArrowDownCircleSharp : IoArrowDownCircleSharp}
 					color={userVoteValue === -1 ? 'green.200' : 'gray.400'}
-					fontSize={22} onClick={handleVote} cursor={'pointer'}
+					fontSize={22} onClick={() => handleVote(post, -1, post.communityId)} cursor={'pointer'}
 				/>
 			</Flex>
 			<Flex

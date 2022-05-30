@@ -23,7 +23,9 @@ const UserMenuComponent: React.FC<UserMenuProps> = ({user}) => {
 	const handleLogout = async () => {
 		await signOut(auth);
 		// and clear the community state
-		resetCommunityState();
+		// resetCommunityState();
+		// here we donnot want clear the whole community, but just the communitySnippets
+	//	 so in the useCommunityData, we set the useEffect
 	}
 
 	return (
