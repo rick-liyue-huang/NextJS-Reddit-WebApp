@@ -13,8 +13,9 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({user}) => {
 			<InputGroup>
 				<InputLeftElement
 					pointerEvents='none' mb={1}
-					children={<SearchIcon color='gray.300' />}
-				/>
+				>
+					<SearchIcon color='gray.300' />
+				</InputLeftElement>
 				<Input
 					type='text' placeholder='search content...'
 					fontSize={'12pt'} h={'34px'} color={'gray.200'}
