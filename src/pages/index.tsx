@@ -13,6 +13,9 @@ import CreatePostLinkComponent from "../components/Community/CreatePostLink";
 import {useRecoilValue} from "recoil";
 import {communityState} from "../atoms/communitiesAtom";
 import {useCommunityData} from "../hooks/useCommunityData";
+import RecommenditionComponent from "../components/Community/Recommenditions";
+import PremiumComponent from "../components/Community/Premium";
+import PersonalHomeComponent from "../components/Community/PersonalHome";
 
 
 
@@ -156,9 +159,11 @@ const Home: NextPage = () => {
           )
         }
       </>
-      <>
-        {/*<Recommenditions />*/}
-      </>
+      <Stack spacing={2}>
+        <RecommenditionComponent />
+        <PremiumComponent />
+        <PersonalHomeComponent />
+      </Stack>
     </PageContentComponent>
   )
 }

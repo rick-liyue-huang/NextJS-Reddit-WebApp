@@ -2,11 +2,11 @@ import React from "react";
 import { Button, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { FaReddit } from "react-icons/fa";
 
-const PersonalHome: React.FC = () => {
+const PersonalHomeComponent: React.FC = () => {
   return (
     <Flex
       direction="column"
-      bg="white"
+      // bg="white"
       borderRadius={4}
       cursor="pointer"
       border="1px solid"
@@ -17,16 +17,16 @@ const PersonalHome: React.FC = () => {
         align="flex-end"
         color="white"
         p="6px 10px"
-        bg="blue.500"
-        height="34px"
+        // bg="green.300"
+        // height="34px"
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
-        bgImage="url(/images/redditPersonalHome.png)"
+        // bgImage="url(/images/redditPersonalHome.png)"
         backgroundSize="cover"
       ></Flex>
       <Flex direction="column" p="12px">
         <Flex align="center" mb={2}>
-          <Icon as={FaReddit} fontSize={50} color="brand.100" mr={2} />
+          <Icon as={FaReddit} fontSize={50} color="green.100" mr={2} />
           <Text fontWeight={600}>Home</Text>
         </Flex>
         <Stack spacing={3}>
@@ -42,4 +42,4 @@ const PersonalHome: React.FC = () => {
     </Flex>
   );
 };
-export default PersonalHome;
+export default PersonalHomeComponent;
