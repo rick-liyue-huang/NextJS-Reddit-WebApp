@@ -58,7 +58,8 @@ const PostsComponent: React.FC<PostsProps> = ({communityData}) => {
 
 	useEffect(() => {
 		getPosts();
-	}, [])
+	//	 add dependency to load the post from the current community
+	}, [communityData])
 
 	return (
 		<>

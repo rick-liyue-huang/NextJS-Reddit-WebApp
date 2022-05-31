@@ -76,6 +76,7 @@ export const useCommunityData = () => {
 			const newSnippet: CommunitySnippet = {
 				communityId: communityData.id,
 				imageUrl: communityData.imageUrl || '',
+				isModerator: user?.uid === communityData.creatorId,
 			};
 			batch.set(doc(fireStore, `users/${user?.uid}/communitySnippets`, communityData.id), newSnippet);
 
