@@ -18,6 +18,7 @@ import {useSelectFile} from "../../../hooks/useSelectFile";
 
 interface NewPostFormProps {
 	user: User;
+	communityImageUrl?: string
 }
 
 export interface FormTabItem {
@@ -53,7 +54,7 @@ interface InputProps {
 	body: string;
 }
 
-const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
+const NewPostFormComponent: React.FC<NewPostFormProps> = ({user, communityImageUrl}) => {
 
 	const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
 	const [textInputs, setTextInputs] = useState<InputProps>({
@@ -84,6 +85,7 @@ const NewPostFormComponent: React.FC<NewPostFormProps> = ({user}) => {
 			numberOfComments: 0,
 			voteStatus: 0,
 			createdAt: serverTimestamp() as Timestamp,
+			communityImageUrl: communityImageUrl || ''
 		};
 
 		setLoading(true);

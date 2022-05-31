@@ -14,6 +14,7 @@ import {
 	IoArrowUpCircleSharp,
 	IoBookmarkOutline,
 } from "react-icons/io5";
+import Link from 'next/link';
 
 interface PostItemProps {
 	post: Post;
@@ -22,6 +23,7 @@ interface PostItemProps {
 	handleVote: (event: MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, communityId: string) => void;
 	handleDeletePost: (post: Post) => Promise<boolean>
 	handleSelectPost?: (post: Post) => void;
+	homePage?: boolean;
 }
 
 const PostItemComponent: React.FC<PostItemProps> = ({
@@ -30,7 +32,8 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 	userVoteValue,
 	handleVote,
 	handleSelectPost,
-	handleDeletePost
+	handleDeletePost,
+	homePage
 }) => {
 
 	const [loadingImage, setLoadingImage] = useState(true);
@@ -112,7 +115,29 @@ const PostItemComponent: React.FC<PostItemProps> = ({
 				}
 				<Stack spacing={1} p={'10px'}>
 					<Stack direction={'row'} spacing={0.6} align={'center'} fontSize={'9pt'}>
+
 						{/*Home check*/}
+
+						{
+							homePage && (
+								<>
+									{
+										post.communityImageUrl ? (
+											<Image src={post.communityImageUrl} mr={1} borderRadius={'full'} boxSize={'18px'} />
+										) : (
+											<Icon as={FaReddit} fontSize={'10pt'} color={'green.200'} mr={1} />
+										)
+									}
+									<Link href={`/r/${post.communityId}`}>
+										<Text
+											fontWeight={700} _hover={{textDecoration: 'underline'}}
+											onClick={e => e.stopPropagation()}
+										>{`r/${post.communityId}`}</Text>
+									</Link>
+									<Icon as={BsDot} color={'green.300'} fontSize={8} />
+								</>
+							)
+						}
 						<Text>Posted by u/{post.creatorDisplayName} {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}
 						</Text>
 					</Stack>
