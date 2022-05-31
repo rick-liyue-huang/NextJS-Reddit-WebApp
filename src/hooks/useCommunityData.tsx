@@ -52,7 +52,8 @@ export const useCommunityData = () => {
 			// and store them in global recoil state
 			setCommunityStateValue(prev => ({
 				...prev,
-				mySnippets: snippets as CommunitySnippet[]
+				mySnippets: snippets as CommunitySnippet[],
+				snippetsFetched: true // means the posts gotten from database
 			}))
 
 
@@ -155,7 +156,8 @@ export const useCommunityData = () => {
 		if (!user) {
 			setCommunityStateValue(prev => ({
 				...prev,
-				mySnippets: []
+				mySnippets: [],
+				snippetsFetched: false
 			}));
 			return
 		}

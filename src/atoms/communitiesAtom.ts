@@ -24,10 +24,12 @@ interface CommunityState {
 
 	// visitedCommunity
 	currentCommunity?: Community;
+	snippetsFetched: boolean; // used to get the login home posts
 }
 
 const defaultCommunityState = {
-	mySnippets: []
+	mySnippets: [],
+	snippetsFetched: false,
 }
 
 
