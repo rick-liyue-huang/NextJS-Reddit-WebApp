@@ -6,6 +6,8 @@ import {HiLockClosed} from "react-icons/hi";
 import {doc, getDoc, runTransaction, serverTimestamp, setDoc} from '@firebase/firestore';
 import {auth, fireStore} from '../../../firebase/clientApp';
 import {useAuthState} from "react-firebase-hooks/auth";
+import {useRouter} from "next/router";
+import {useDirectory} from "../../../hooks/useDirectory";
 
 
 interface CreateCommunityProps {
@@ -24,6 +26,8 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 	const [error, setError] = useState('');
 	const [user] = useAuthState(auth);
 	const [loading, setLoading] = useState(false);
+	const router = useRouter();
+	const {handleToggleMenuOpen} = useDirectory();
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 
@@ -83,7 +87,12 @@ const CreateCommunityModal: React.FC<CreateCommunityProps> = ({open, handleClose
 					isModerator: true
 				});
 
-			})
+			});
+
+			// to open the create community modal
+			handleClose();
+			handleToggleMenuOpen();
+			router.push(`/r/${communityName}`);
 
 			/*const communityDoc = await getDoc(communityDocRef);
 
