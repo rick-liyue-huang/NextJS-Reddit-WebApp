@@ -15,10 +15,17 @@
     "npm": "please-use-yarn"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.2.8",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@fontsource/open-sans": "^4.5.11",
+    "@fontsource/raleway": "^4.5.10",
     "firebase": "^9.9.2",
+    "framer-motion": "^6",
     "next": "12.2.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "recoil": "^0.7.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
@@ -35,6 +42,6 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md,ts,tsx,md}": "prettier --write"
   }
 }
