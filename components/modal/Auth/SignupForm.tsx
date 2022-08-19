@@ -1,7 +1,10 @@
 import { Button, Flex, Input, Text } from '@chakra-ui/react';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
+import { FIREBASE_AUTH_ERRORS } from '../../../firebase/authErrors';
+import { auth } from '../../../firebase/clientConfig';
 
 export const SignUpComponent: React.FC = () => {
   const [signupForm, setSignupForm] = useState({
@@ -9,9 +12,23 @@ export const SignUpComponent: React.FC = () => {
     password: '',
     confirmPassword: '',
   });
+  const [signupError, setsignupError] = useState('');
   const setAuthModalState = useSetRecoilState(authModalState);
 
-  const handleSubmit = () => {};
+  const [createUserWithEmailAndPassword, user, loading, userError] =
+    useCreateUserWithEmailAndPassword(auth);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (signupError) setsignupError('');
+    if (signupForm.email && signupForm.password) {
+      if (signupForm.password !== signupForm.confirmPassword) {
+        setsignupError('Passwords do not match');
+        return;
+      }
+      createUserWithEmailAndPassword(signupForm.email, signupForm.password);
+    }
+  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -62,8 +79,23 @@ export const SignUpComponent: React.FC = () => {
         _hover={{ bg: 'white', border: '1px solid', borderColor: 'green.500' }}
         _focus={{ bg: 'white', border: '1px solid', borderColor: 'green.500' }}
       />
+      {(signupError || userError) && (
+        <Text textAlign={'center'} color="red" fontSize={'10pt'}>{`${
+          signupError ||
+          FIREBASE_AUTH_ERRORS[
+            userError?.message as keyof typeof FIREBASE_AUTH_ERRORS
+          ]
+        }`}</Text>
+      )}
 
-      <Button width={'100%'} height="30px" type="submit" mt={2} mb={2}>
+      <Button
+        width={'100%'}
+        height="30px"
+        type="submit"
+        mt={2}
+        mb={2}
+        isLoading={loading}
+      >
         Sign Up
       </Button>
       <Flex fontSize={'9pt'} justifyContent="center">
