@@ -16,9 +16,9 @@ export const LoginComponent: React.FC = () => {
   const [signInWithEmailAndPassword, user, loading, userError] =
     useSignInWithEmailAndPassword(auth);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signInWithEmailAndPassword(loginForm.email, loginForm.password);
+    await signInWithEmailAndPassword(loginForm.email, loginForm.password);
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

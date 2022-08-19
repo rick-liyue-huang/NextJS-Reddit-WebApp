@@ -16,6 +16,7 @@ export const ResetPasswordForm: React.FC = () => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // get the result after async submission
     await sendPasswordResetEmail(email);
     setSuccess(true);
   };

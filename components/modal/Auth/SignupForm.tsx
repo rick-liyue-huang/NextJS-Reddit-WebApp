@@ -18,7 +18,7 @@ export const SignUpComponent: React.FC = () => {
   const [createUserWithEmailAndPassword, user, loading, userError] =
     useCreateUserWithEmailAndPassword(auth);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (signupError) setsignupError('');
     if (signupForm.email && signupForm.password) {
@@ -26,7 +26,10 @@ export const SignUpComponent: React.FC = () => {
         setsignupError('Passwords do not match');
         return;
       }
-      createUserWithEmailAndPassword(signupForm.email, signupForm.password);
+      await createUserWithEmailAndPassword(
+        signupForm.email,
+        signupForm.password
+      );
     }
   };
 
@@ -59,6 +62,7 @@ export const SignUpComponent: React.FC = () => {
         mb={2}
         type="password"
         required
+        minLength={6}
         onChange={handleChange}
         fontSize="10pt"
         bg="gray.50"
@@ -72,6 +76,7 @@ export const SignUpComponent: React.FC = () => {
         mb={2}
         type="password"
         required
+        minLength={6}
         onChange={handleChange}
         fontSize="10pt"
         bg="gray.50"
