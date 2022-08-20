@@ -15,7 +15,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import React, { ChangeEvent, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsFillEyeFill, BsFillPersonFill } from 'react-icons/bs';
@@ -68,20 +68,33 @@ export const CreateCommunityModal: React.FC<Props> = ({
       // create community document in firebase
       // check the existing name
       const communityDocRef = doc(db, 'communities', communityName);
-      const communityDoc = await getDoc(communityDocRef);
 
-      if (communityDoc.exists()) {
-        throw new Error(
-          `sorry, /r${communityName} is already exists, try another please.`
+      // create transaction, which will create the cascade documents under subcollection.
+      await runTransaction(db, async (transaction) => {
+        const communityDoc = await transaction.get(communityDocRef);
+
+        if (communityDoc.exists()) {
+          throw new Error(
+            `sorry, /r${communityName} is already exists, try another please.`
+          );
+        }
+
+        // otherwise create community name
+        transaction.set(communityDocRef, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfMembers: 1,
+          privacyType: communityType,
+        });
+
+        // create communitySnippet on user
+        transaction.set(
+          doc(db, `users/${user?.uid}/communitySnippets`, communityName),
+          {
+            communityId: communityName,
+            isModerator: true,
+          }
         );
-      }
-
-      // otherwise create community name
-      await setDoc(communityDocRef, {
-        creatorId: user?.uid,
-        createdAt: serverTimestamp(),
-        numberOfMembers: 1,
-        privacyType: communityType,
       });
     } catch (e: any) {
       console.log(`const handleCreateCommunity error: ${e}`);
@@ -223,3 +236,48 @@ export const CreateCommunityModal: React.FC<Props> = ({
     </>
   );
 };
+
+/*
+  const handleCreateCommunity = async () => {
+    if (error) setError('');
+    // validate the community name
+    const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (format.test(communityName) || communityName.length <= 3) {
+      setError(
+        'community name character count must be between 3 and 21, and only contains letters, numbers'
+      );
+      return;
+    }
+    setLoading(true);
+
+    try {
+      // create community document in firebase
+      // check the existing name
+      const communityDocRef = doc(db, 'communities', communityName);
+
+      const communityDoc = await getDoc(communityDocRef);
+
+      if (communityDoc.exists()) {
+        throw new Error(
+          `sorry, /r${communityName} is already exists, try another please.`
+        );
+      }
+
+      // otherwise create community name
+      await setDoc(communityDocRef, {
+        creatorId: user?.uid,
+        createdAt: serverTimestamp(),
+        numberOfMembers: 1,
+        privacyType: communityType,
+      });
+    } catch (e: any) {
+      console.log(`const handleCreateCommunity error: ${e}`);
+      console.log(e.message);
+
+      setError(e.message);
+    } finally {
+      setLoading(false);
+      setCommunityName('');
+    }
+  };
+  */
