@@ -3,6 +3,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { BiPoll } from 'react-icons/bi';
 import { BsLink45Deg, BsMic } from 'react-icons/bs';
 import { IoDocumentText, IoImageOutline } from 'react-icons/io5';
+import { FormImage } from './PostForm/FormImage';
 import { FormInput } from './PostForm/FormInput';
 import { TabItemComponent } from './TabItem';
 
@@ -40,12 +41,24 @@ export const NewPostForm: React.FC = () => {
     title: '',
     body: '',
   });
-  const [selectFile, setSelectFile] = useState('');
+  const [selectedImg, setSelectedImg] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleCreatePost = async () => {};
 
-  const handleSelectImg = () => {};
+  const handleSelectImg = (event: ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader();
+    // confirm the question mark
+    if (event.target.files?.[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    reader.onload = (readerEvent) => {
+      if (readerEvent.target?.result) {
+        setSelectedImg(readerEvent.target.result as string);
+      }
+    };
+  };
 
   const handleTextChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,6 +91,14 @@ export const NewPostForm: React.FC = () => {
             onChange={handleTextChange}
             loading={loading}
             handleCreatePost={handleCreatePost}
+          />
+        )}
+        {selectedTab === 'Iamges & Video' && (
+          <FormImage
+            handleSelectImg={handleSelectImg}
+            setSelectedImg={setSelectedImg}
+            setSelectedTab={setSelectedTab}
+            selectedImg={selectedImg}
           />
         )}
       </Flex>
