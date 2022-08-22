@@ -9,16 +9,10 @@ export const SubLayout: React.FC<Props> = ({ children }) => {
   console.log(children);
 
   return (
-    <Flex border="1px solid red" justify={'center'} p="16px 0">
-      <Flex
-        border="1px solid blue"
-        width={'95%'}
-        justify="center"
-        maxWidth="860px"
-      >
+    <Flex justify={'center'} p="16px 0">
+      <Flex width={'95%'} justify="center" maxWidth="860px">
         {/* LHS */}
         <Flex
-          border="1px solid green"
           direction={'column'}
           width={{ base: '100%', md: '65%' }}
           mr={{ base: 0, md: 6 }}
@@ -27,7 +21,6 @@ export const SubLayout: React.FC<Props> = ({ children }) => {
         </Flex>
         {/* RHS */}
         <Flex
-          border="1px solid orange"
           direction={'column'}
           display={{ base: 'none', md: 'flex' }}
           flexGrow={1}
