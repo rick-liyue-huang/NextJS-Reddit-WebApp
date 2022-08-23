@@ -15,6 +15,7 @@ import { BsLink45Deg, BsMic } from 'react-icons/bs';
 import { IoDocumentText, IoImageOutline } from 'react-icons/io5';
 import { Post } from '../../atoms/postAtom';
 import { db, storage } from '../../firebase/clientConfig';
+import { useSelectImage } from '../../hooks/useSelectImage';
 import { FormImage } from './PostForm/FormImage';
 import { FormInput } from './PostForm/FormInput';
 import { TabItemComponent } from './TabItem';
@@ -57,10 +58,10 @@ export const NewPostForm: React.FC<Props> = ({ user }) => {
     title: '',
     body: '',
   });
-  const [selectedImg, setSelectedImg] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const router = useRouter();
+  const { selectedImg, setSelectedImg, handleSelectImg } = useSelectImage();
 
   const handleCreatePost = async () => {
     const { communityId } = router.query;
@@ -101,20 +102,6 @@ export const NewPostForm: React.FC<Props> = ({ user }) => {
       setError(true);
     }
     setLoading(false);
-  };
-
-  const handleSelectImg = (event: ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    // confirm the question mark
-    if (event.target.files?.[0]) {
-      reader.readAsDataURL(event.target.files[0]);
-    }
-
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedImg(readerEvent.target.result as string);
-      }
-    };
   };
 
   const handleTextChange = (

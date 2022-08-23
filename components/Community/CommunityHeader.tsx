@@ -21,8 +21,17 @@ export const CommunityHeader: React.FC<Props> = ({ communityData }) => {
       <Box height="50%" bg="green.400" />
       <Flex justify={'center'} bg="white" flexGrow={1}>
         <Flex width={'95%'} maxWidth="860px">
-          {communityData.imageUrl ? (
-            <Image />
+          {communityStateVal.currentCommunity?.imageUrl ? (
+            <Image
+              src={communityStateVal.currentCommunity.imageUrl}
+              borderRadius="full"
+              boxSize="66px"
+              alt="community img"
+              position="relative"
+              top={-2}
+              color="green.500"
+              border="4px solid white"
+            />
           ) : (
             <Icon
               as={FaReddit}

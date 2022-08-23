@@ -4,23 +4,65 @@ import {
   Divider,
   Flex,
   Icon,
+  Image,
+  Input,
+  Spinner,
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import moment from 'moment';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { FaReddit } from 'react-icons/fa';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { RiCakeLine } from 'react-icons/ri';
-import { Community } from '../../atoms/communityAtom';
+import { useSetRecoilState } from 'recoil';
+import { Community, communityState } from '../../atoms/communityAtom';
+import { auth, db, storage } from '../../firebase/clientConfig';
+import { useSelectImage } from '../../hooks/useSelectImage';
 
 interface Props {
   communityData: Community;
 }
 
 export const AboutComponent: React.FC<Props> = ({ communityData }) => {
-  const router = useRouter();
+  const [user] = useAuthState(auth);
+  const selectedImgRef = useRef<HTMLInputElement>(null);
+  const { selectedImg, setSelectedImg, handleSelectImg } = useSelectImage();
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const setCommunityStateVal = useSetRecoilState(communityState);
+
+  const handleUploadImg = async () => {
+    if (!selectedImg) return;
+    setUploadingImg(true);
+    try {
+      // upload the community image to storage
+      const imageRef = ref(storage, `communities/${communityData.id}/image`);
+      uploadString(imageRef, selectedImg, 'data_url');
+      const downloadUrl = await getDownloadURL(imageRef);
+      console.log(imageRef, downloadUrl);
+
+      // update the community data in firestore
+      await updateDoc(doc(db, 'communities', communityData.id), {
+        imageUrl: downloadUrl,
+      });
+
+      // update the community state globally
+      setCommunityStateVal((prev) => ({
+        ...prev,
+        currentCommunity: {
+          ...prev.currentCommunity,
+          imageUrl: downloadUrl,
+        } as Community,
+      }));
+    } catch (err) {
+      console.log(`handleUploadImg error: `, err);
+    }
+    setUploadingImg(false);
+  };
 
   return (
     <Box position="sticky" top="14px">
@@ -66,9 +108,58 @@ export const AboutComponent: React.FC<Props> = ({ communityData }) => {
               </Text>
             )}
           </Flex>
-          <Link href={`/r/${router.query.communityId}/submit`}>
+          <Link href={`/r/${communityData.id}/submit`}>
             <Button mt={3}>Create Post</Button>
           </Link>
+          {user?.uid === communityData.creatorId && (
+            <>
+              <Divider />
+              <Stack spacing={1} fontSize="10pt">
+                <Text fontWeight={600}>Admin</Text>
+                <Flex align="center" justify="space-between">
+                  <Text
+                    color="green.500"
+                    cursor={'pointer'}
+                    _hover={{ textDecoration: 'underline' }}
+                    onClick={() => selectedImgRef.current?.click()}
+                  >
+                    Change Image
+                  </Text>
+                  {communityData.imageUrl || selectedImg ? (
+                    <Image
+                      src={selectedImg || communityData.imageUrl}
+                      borderRadius="full"
+                      boxSize={'40px'}
+                      alt="community img"
+                    />
+                  ) : (
+                    <Icon
+                      as={FaReddit}
+                      fontSize={40}
+                      color="green.500"
+                      mr={2}
+                    />
+                  )}
+                </Flex>
+                {selectedImg &&
+                  (uploadingImg ? (
+                    <Spinner />
+                  ) : (
+                    <Text cursor="pointer" onClick={handleUploadImg}>
+                      Save Changes
+                    </Text>
+                  ))}
+                <Input
+                  id="img-upload"
+                  type="file"
+                  accept="image/x-png,image/gif, image/jpeg"
+                  hidden
+                  ref={selectedImgRef}
+                  onChange={handleSelectImg}
+                />
+              </Stack>
+            </>
+          )}
         </Stack>
       </Flex>
     </Box>
