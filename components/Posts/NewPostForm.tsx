@@ -83,7 +83,8 @@ export const NewPostForm: React.FC<Props> = ({ user }) => {
 
       // store the image in storage
       if (selectedImg) {
-        const imageRef = ref(storage, `posts/${postDocRef.id}`);
+        // match with the delete post image storage bucket
+        const imageRef = ref(storage, `posts/${postDocRef.id}/image`);
         await uploadString(imageRef, selectedImg, 'data_url');
         const downloadUrl = await getDownloadURL(imageRef);
 

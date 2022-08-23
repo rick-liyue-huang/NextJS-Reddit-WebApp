@@ -1,4 +1,14 @@
-import { Flex, Icon, Image, Skeleton, Stack, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Flex,
+  Icon,
+  Image,
+  Skeleton,
+  Spinner,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
@@ -18,7 +28,7 @@ interface Props {
   userIsCreator: boolean;
   userVoteValue?: number;
   handleVote: () => {};
-  handleRemovePost: () => {};
+  handleRemovePost: (post: Post) => Promise<boolean>;
   handleSelectPost: () => void;
 }
 
@@ -31,6 +41,23 @@ export const PostItem: React.FC<Props> = ({
   handleSelectPost,
 }) => {
   const [loadingImg, setLoadingImg] = useState(true);
+  const [error, setError] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleDeletePost = async () => {
+    setDeleteLoading(true);
+    try {
+      const success = await handleRemovePost(post);
+
+      if (!success) {
+        throw new Error(`fail to delete post`);
+      }
+      console.log('delete post successfully');
+    } catch (err: any) {
+      setError(err.message);
+    }
+    setDeleteLoading(false);
+  };
 
   return (
     <Flex
@@ -143,13 +170,25 @@ export const PostItem: React.FC<Props> = ({
               borderRadius={4}
               _hover={{ bg: 'gray.200' }}
               cursor="pointer"
-              onClick={handleRemovePost}
+              onClick={handleDeletePost}
             >
-              <Icon as={AiOutlineDelete} mr={2} />
-              <Text fontSize="9pt">Delete</Text>
+              {deleteLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <>
+                  <Icon as={AiOutlineDelete} mr={2} />
+                  <Text fontSize="9pt">Delete</Text>
+                </>
+              )}
             </Flex>
           )}
         </Flex>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            <Text mr={2}>{error}</Text>
+          </Alert>
+        )}
       </Flex>
     </Flex>
   );
