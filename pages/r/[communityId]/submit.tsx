@@ -1,9 +1,13 @@
 import { Box, Text } from '@chakra-ui/react';
 import { NextPage } from 'next';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { SubLayout } from '../../../components/Layout/SubLayout';
 import { NewPostForm } from '../../../components/Posts/NewPostForm';
+import { auth } from '../../../firebase/clientConfig';
 
 const SubmitPost: NextPage = () => {
+  const [user] = useAuthState(auth);
+
   return (
     <SubLayout>
       <>
@@ -11,7 +15,7 @@ const SubmitPost: NextPage = () => {
           <Text>Create A Post</Text>
         </Box>
         {/* <NewPostForm /> */}
-        <NewPostForm />
+        {user && <NewPostForm user={user} />}
       </>
       <>{/* <About /> */}</>
     </SubLayout>
