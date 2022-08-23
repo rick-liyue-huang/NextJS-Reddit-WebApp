@@ -1,8 +1,11 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSidePropsContext, NextPage } from 'next';
+import { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 import safeJsonStringify from 'safe-json-stringify';
-import { Community } from '../../../atoms/communityAtom';
+import { Community, communityState } from '../../../atoms/communityAtom';
 import { NotFound } from '../../../components/Community/404';
+import { AboutComponent } from '../../../components/Community/About';
 import { CommunityHeader } from '../../../components/Community/CommunityHeader';
 import { CreatePostLink } from '../../../components/Community/CreatePostLink';
 import { SubLayout } from '../../../components/Layout/SubLayout';
@@ -15,10 +18,18 @@ interface Props {
 
 const communityIdPage: NextPage<Props> = ({ communityData }) => {
   // console.log(communityData);
+  const setCommunityStateVal = useSetRecoilState(communityState);
 
   if (!communityData) {
     return <NotFound />;
   }
+
+  useEffect(() => {
+    setCommunityStateVal((prev) => ({
+      ...prev,
+      currentCommunity: communityData,
+    }));
+  }, []);
 
   return (
     <>
@@ -29,7 +40,7 @@ const communityIdPage: NextPage<Props> = ({ communityData }) => {
           <Posts communityData={communityData} />
         </>
         <>
-          <div>RHS</div>
+          <AboutComponent communityData={communityData} />
         </>
       </SubLayout>
     </>
