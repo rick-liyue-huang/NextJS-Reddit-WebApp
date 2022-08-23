@@ -92,14 +92,14 @@ export const NewPostForm: React.FC<Props> = ({ user }) => {
           imageUrl: downloadUrl,
         });
       }
+
+      // redirect to post page
+      router.back();
     } catch (err: any) {
       console.log(`handleCreatePost err `, err.message);
       setError(true);
     }
     setLoading(false);
-
-    // redirect to post page
-    // router.back();
   };
 
   const handleSelectImg = (event: ChangeEvent<HTMLInputElement>) => {

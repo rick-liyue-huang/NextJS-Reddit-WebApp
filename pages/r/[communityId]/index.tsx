@@ -6,6 +6,7 @@ import { NotFound } from '../../../components/Community/404';
 import { CommunityHeader } from '../../../components/Community/CommunityHeader';
 import { CreatePostLink } from '../../../components/Community/CreatePostLink';
 import { SubLayout } from '../../../components/Layout/SubLayout';
+import { Posts } from '../../../components/Posts/Posts';
 import { db } from '../../../firebase/clientConfig';
 
 interface Props {
@@ -25,6 +26,7 @@ const communityIdPage: NextPage<Props> = ({ communityData }) => {
       <SubLayout>
         <>
           <CreatePostLink />
+          <Posts communityData={communityData} />
         </>
         <>
           <div>RHS</div>
