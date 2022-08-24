@@ -1,12 +1,23 @@
-import { Box, Flex } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 
 import { User } from 'firebase/auth';
 import {
   collection,
   doc,
+  getDocs,
   increment,
+  orderBy,
+  query,
   serverTimestamp,
   Timestamp,
+  where,
   writeBatch,
 } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +25,7 @@ import { useSetRecoilState } from 'recoil';
 import { Post, postState } from '../../../atoms/postAtom';
 import { db } from '../../../firebase/clientConfig';
 import { CommentInputComponent } from './CommentInput';
+import { CommentItem } from './CommentItem';
 
 export interface Comment {
   id: string;
@@ -39,7 +51,7 @@ export const CommentsComponent: React.FC<Props> = ({
 }) => {
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
   const setPostStateVal = useSetRecoilState(postState);
 
@@ -63,6 +75,9 @@ export const CommentsComponent: React.FC<Props> = ({
       };
 
       batch.set(commentDocRef, newComment);
+
+      // display the correct time, by deal with serverTimestamp
+      newComment.createdAt = { seconds: Date.now() / 1000 } as Timestamp;
 
       // update post numberOfMembers status
       const postDocRef = doc(db, 'posts', selectedPost?.id!);
@@ -99,11 +114,31 @@ export const CommentsComponent: React.FC<Props> = ({
     }
   };
 
-  const getPostComments = async () => {};
+  const getPostComments = async () => {
+    try {
+      const commentQuery = query(
+        collection(db, 'comments'),
+        where('postId', '==', selectedPost?.id),
+        orderBy('createdAt', 'desc')
+      );
+
+      const commentDocs = await getDocs(commentQuery);
+      const comments = commentDocs.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setComments(comments as Comment[]);
+    } catch (err) {
+      console.log(`getPostComments error: `, err);
+    }
+    setFetchLoading(false);
+  };
 
   useEffect(() => {
+    if (!selectedPost) return;
     getPostComments();
-  }, []);
+  }, [selectedPost]);
 
   return (
     <Box bg="white" borderRadius={'0 0 4px 4px'} p={2}>
@@ -124,6 +159,47 @@ export const CommentsComponent: React.FC<Props> = ({
           handleCreateComment={handleCreateComment}
         />
       </Flex>
+      <Stack spacing={6} p={2}>
+        {fetchLoading ? (
+          <>
+            {[0, 1, 2].map((item) => (
+              <Box key={item} padding={6} bg="white">
+                <SkeletonCircle size="10pt" />
+                <SkeletonText mt={4} noOfLines={2} spacing={4} />
+              </Box>
+            ))}
+          </>
+        ) : (
+          <>
+            {comments.length === 0 ? (
+              <Flex
+                direction={'column'}
+                justify="center"
+                align="center"
+                borderTop={'1px solid'}
+                borderColor="gray.100"
+                p={20}
+              >
+                <Text fontWeight={700} opacity={0.2}>
+                  No Comments
+                </Text>
+              </Flex>
+            ) : (
+              <>
+                {comments.map((comment) => (
+                  <CommentItem
+                    key={comment.id}
+                    comment={comment}
+                    handleDeleteComment={handleDeleteComment}
+                    deleteLoading={false}
+                    userId={user?.uid}
+                  />
+                ))}
+              </>
+            )}
+          </>
+        )}
+      </Stack>
     </Box>
   );
 };
