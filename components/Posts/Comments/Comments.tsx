@@ -49,11 +49,13 @@ export const CommentsComponent: React.FC<Props> = ({
   selectedPost,
   communityId,
 }) => {
+  // TODO seperate the the logic in useComments in future
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
   const setPostStateVal = useSetRecoilState(postState);
+  const [deleteCommentIdLoading, setDeleteCommentIdLoading] = useState('');
 
   const handleCreateComment = async () => {
     setCreateLoading(true);
@@ -104,14 +106,36 @@ export const CommentsComponent: React.FC<Props> = ({
     setCreateLoading(false);
   };
 
+  // compare with 'handleRemovePost'
   const handleDeleteComment = async (comment: any) => {
-    // remove comment document in collection comments
-    // update post numberOfMembers status
-    // update recoil state
+    setDeleteCommentIdLoading(comment.id);
     try {
+      // remove comment document in collection comments
+      const batch = writeBatch(db);
+      const commentDocRef = doc(db, 'comments', comment.id);
+      batch.delete(commentDocRef);
+      // update post numberOfMembers status
+      const postDocRef = doc(db, 'posts', selectedPost?.id!);
+      batch.update(postDocRef, {
+        numberOfComments: increment(-1),
+      });
+
+      await batch.commit();
+
+      // update recoil state
+      setPostStateVal((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...prev.selectedPost,
+          numberOfComments: prev?.selectedPost?.numberOfComments! - 1,
+        } as Post,
+      }));
+
+      setComments((prev) => prev.filter((item) => item.id !== comment.id));
     } catch (err) {
       console.log(`handleDeleteComment error: `, err);
     }
+    setDeleteCommentIdLoading('');
   };
 
   const getPostComments = async () => {
@@ -151,13 +175,15 @@ export const CommentsComponent: React.FC<Props> = ({
         width="100%"
       >
         {/* <CommentInput /> */}
-        <CommentInputComponent
-          commentText={commentText}
-          setCommentText={setCommentText}
-          user={user}
-          createLoading={createLoading}
-          handleCreateComment={handleCreateComment}
-        />
+        {!fetchLoading && (
+          <CommentInputComponent
+            commentText={commentText}
+            setCommentText={setCommentText}
+            user={user}
+            createLoading={createLoading}
+            handleCreateComment={handleCreateComment}
+          />
+        )}
       </Flex>
       <Stack spacing={6} p={2}>
         {fetchLoading ? (
@@ -191,7 +217,7 @@ export const CommentsComponent: React.FC<Props> = ({
                     key={comment.id}
                     comment={comment}
                     handleDeleteComment={handleDeleteComment}
-                    deleteLoading={false}
+                    deleteLoading={deleteCommentIdLoading === comment.id}
                     userId={user?.uid}
                   />
                 ))}

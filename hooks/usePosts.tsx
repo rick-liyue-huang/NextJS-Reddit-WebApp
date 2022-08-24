@@ -3,6 +3,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  orderBy,
   query,
   where,
   writeBatch,
@@ -151,6 +152,7 @@ export const usePosts = () => {
     router.push(`/r/${post.communityId}/comments/${post.id}`);
   };
 
+  // * use query to delete comments when post is deleted!!!!
   const handleRemovePost = async (post: Post): Promise<boolean> => {
     try {
       //check if the post has image
@@ -160,8 +162,24 @@ export const usePosts = () => {
 
         await deleteObject(imageRef);
       }
+
       // delete post document from db
       const postDocRef = doc(db, `posts`, post.id!);
+
+      // delete comment documents on the post
+      if (post.numberOfComments > 0) {
+        const commentQuery = query(
+          collection(db, 'comments'),
+          where('postId', '==', post.id),
+          orderBy('createdAt', 'desc')
+        );
+        const commentDocs = await getDocs(commentQuery);
+
+        commentDocs.docs.map(async (doc) => await deleteDoc(doc.ref));
+
+        console.log('commentDocs----', commentDocs);
+      }
+
       await deleteDoc(postDocRef);
 
       // update recoil post state
