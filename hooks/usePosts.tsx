@@ -8,7 +8,8 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { MouseEvent, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { authModalState } from '../atoms/authModalAtom';
@@ -21,8 +22,15 @@ export const usePosts = () => {
   const [user] = useAuthState(auth);
   const currenCommunity = useRecoilValue(communityState).currentCommunity;
   const setAuthModalState = useSetRecoilState(authModalState);
+  const router = useRouter();
 
-  const handleVote = async (post: Post, vote: number, communityId: string) => {
+  const handleVote = async (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    post: Post,
+    vote: number,
+    communityId: string
+  ) => {
+    event.stopPropagation();
     // check the user, if not open the authmodal
     if (!user?.uid) {
       setAuthModalState({ open: true, view: 'login' });
@@ -113,6 +121,14 @@ export const usePosts = () => {
         postVotes: updatedPostVotes,
       }));
 
+      // deal with the single post page
+      if (postStateVal.selectedPost) {
+        setPostStateVal((prev) => ({
+          ...prev,
+          selectedPost: updatedPost,
+        }));
+      }
+
       // update the post document
       const postRef = doc(db, 'posts', post.id!);
       batch.update(postRef, {
@@ -127,7 +143,13 @@ export const usePosts = () => {
     }
   };
 
-  const handleSelectPost = () => {};
+  const handleSelectPost = (post: Post) => {
+    setPostStateVal((prev) => ({
+      ...prev,
+      selectedPost: post,
+    }));
+    router.push(`/r/${post.communityId}/comments/${post.id}`);
+  };
 
   const handleRemovePost = async (post: Post): Promise<boolean> => {
     try {

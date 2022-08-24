@@ -32,6 +32,7 @@ export const DropUserMenu: React.FC<Props> = ({ user }) => {
   const handleSignOut = async () => {
     await signOut(auth);
     // clear community state
+    // change here to deal with the joined status after sign out
     // resetCommunityState();
   };
 

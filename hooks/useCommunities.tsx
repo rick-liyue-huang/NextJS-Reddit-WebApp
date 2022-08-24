@@ -1,10 +1,12 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -23,6 +25,7 @@ export const useCommunities = () => {
   const [error, setError] = useState('');
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
+  const router = useRouter();
 
   const handleToggleCommunity = (
     communityData: Community,
@@ -124,6 +127,24 @@ export const useCommunities = () => {
     setLoading(false);
   };
 
+  // similar as 'handleGetCommunityPostVote'
+  const handleGetCommunityInfo = async (communityId: string) => {
+    try {
+      const communityDocRef = doc(db, 'communities', communityId);
+      const communityDoc = await getDoc(communityDocRef);
+
+      setCommunityStateVal((prev) => ({
+        ...prev,
+        currentCommunity: {
+          id: communityDoc.id,
+          ...communityDoc.data(),
+        } as Community,
+      }));
+    } catch (err) {
+      console.log(`handleGetCommunityInfo error: `, err);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       // return;
@@ -135,6 +156,14 @@ export const useCommunities = () => {
     }
     getMyCommunitySnippets();
   }, [user]);
+
+  useEffect(() => {
+    const { communityId } = router.query;
+
+    if (communityId && !communityStateVal.currentCommunity) {
+      handleGetCommunityInfo(communityId as string);
+    }
+  }, [router.query, communityStateVal.currentCommunity]);
 
   return {
     communityStateVal,
