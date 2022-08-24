@@ -126,6 +126,11 @@ export const useCommunities = () => {
 
   useEffect(() => {
     if (!user) {
+      // return;
+      setCommunityStateVal((prev) => ({
+        ...prev,
+        mySnippets: [],
+      }));
       return;
     }
     getMyCommunitySnippets();

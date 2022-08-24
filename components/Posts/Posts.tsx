@@ -66,7 +66,10 @@ export const Posts: React.FC<Props> = ({ communityData }) => {
               key={post.id}
               post={post}
               userIsCreator={user?.uid === post.creatorId}
-              userVoteValue={undefined}
+              userVoteValue={
+                postStateVal.postVotes.find((vote) => vote.postId === post.id)
+                  ?.voteValue
+              }
               handleVote={handleVote}
               handleSelectPost={handleSelectPost}
               handleRemovePost={handleRemovePost}

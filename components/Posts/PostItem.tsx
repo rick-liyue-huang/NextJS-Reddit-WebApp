@@ -17,8 +17,8 @@ import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
   IoArrowRedoOutline,
-  IoArrowUndoCircleSharp,
   IoArrowUpCircleOutline,
+  IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from 'react-icons/io5';
 import { Post } from '../../atoms/postAtom';
@@ -27,7 +27,7 @@ interface Props {
   post: Post;
   userIsCreator: boolean;
   userVoteValue?: number;
-  handleVote: () => {};
+  handleVote: (post: Post, vote: number, communityId: string) => void;
   handleRemovePost: (post: Post) => Promise<boolean>;
   handleSelectPost: () => void;
 }
@@ -79,14 +79,12 @@ export const PostItem: React.FC<Props> = ({
       >
         <Icon
           as={
-            userVoteValue === 1
-              ? IoArrowUndoCircleSharp
-              : IoArrowUpCircleOutline
+            userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
           }
-          color={userVoteValue === 1 ? 'brand.100' : 'gray.400'}
+          color={userVoteValue === 1 ? 'green.500' : 'gray.400'}
           fontSize={22}
           cursor="pointer"
-          onClick={handleVote}
+          onClick={() => handleVote(post, 1, post.communityId)}
         />
         <Text fontSize={'9pt'}>{post.voteStatus}</Text>
         <Icon
@@ -95,10 +93,10 @@ export const PostItem: React.FC<Props> = ({
               ? IoArrowDownCircleSharp
               : IoArrowDownCircleOutline
           }
-          color={userVoteValue === 1 ? 'brand.100' : 'gray.400'}
+          color={userVoteValue === -1 ? 'green.500' : 'gray.400'}
           fontSize={22}
           cursor="pointer"
-          onClick={handleVote}
+          onClick={() => handleVote(post, -1, post.communityId)}
         />
       </Flex>
       <Flex direction={'column'} width="100%">
