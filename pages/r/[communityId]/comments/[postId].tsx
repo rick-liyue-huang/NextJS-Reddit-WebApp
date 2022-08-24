@@ -1,3 +1,4 @@
+import { User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -6,6 +7,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Post } from '../../../../atoms/postAtom';
 import { AboutComponent } from '../../../../components/Community/About';
 import { SubLayout } from '../../../../components/Layout/SubLayout';
+import { CommentsComponent } from '../../../../components/Posts/Comments/Comments';
 import { PostItem } from '../../../../components/Posts/PostItem';
 import { auth, db } from '../../../../firebase/clientConfig';
 import { useCommunities } from '../../../../hooks/useCommunities';
@@ -58,6 +60,11 @@ const SiglePostPage: NextPage = () => {
         )}
 
         {/* <Comments /> */}
+        <CommentsComponent
+          user={user as User}
+          selectedPost={postStateVal.selectedPost}
+          communityId={postStateVal.selectedPost?.communityId as string}
+        />
       </>
       <>
         {/* <AboutComponent />   */}
