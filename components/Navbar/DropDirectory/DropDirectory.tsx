@@ -9,6 +9,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { User } from 'firebase/auth';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { BsArrowUpRightCircleFill } from 'react-icons/bs';
 import { useDropDirectory } from '../../../hooks/useDropDirectory';
@@ -20,6 +21,7 @@ interface Props {
 
 export const DropDirectory: React.FC<Props> = ({ user }) => {
   const { directoryState, handleToggleCommunityMenuOpen } = useDropDirectory();
+  const router = useRouter();
 
   return (
     <Menu isOpen={directoryState.isOpen}>
@@ -72,7 +74,6 @@ export const DropDirectory: React.FC<Props> = ({ user }) => {
           </MenuList>
         </>
       ) : (
-        // TODO add some logic on popular on sign out
         <MenuButton
           cursor={'pointer'}
           padding="0px 6px"
@@ -80,6 +81,7 @@ export const DropDirectory: React.FC<Props> = ({ user }) => {
           _hover={{ outline: '1px solid', outlineColor: 'gray.200' }}
           mr={2}
           ml={{ base: 0, md: 2 }}
+          onClick={() => window.location.reload()}
         >
           <Flex
             align={'center'}
@@ -89,6 +91,7 @@ export const DropDirectory: React.FC<Props> = ({ user }) => {
             <Flex align="center">
               <Icon
                 fontSize={24}
+                color="orange.300"
                 mr={{ base: 1, md: 2 }}
                 as={BsArrowUpRightCircleFill}
               />
@@ -98,7 +101,6 @@ export const DropDirectory: React.FC<Props> = ({ user }) => {
                 </Text>
               </Flex>
             </Flex>
-            <ChevronDownIcon />
           </Flex>
         </MenuButton>
       )}

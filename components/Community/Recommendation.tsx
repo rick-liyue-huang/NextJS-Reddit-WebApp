@@ -43,6 +43,26 @@ export const Recommendation: React.FC = () => {
     setLoading(false);
   };
 
+  const handleShowAll = async () => {
+    setLoading(true);
+    try {
+      const communitiesQuery = query(
+        collection(db, 'communities'),
+        orderBy('numberOfMembers', 'desc')
+      );
+      const communityDocs = await getDocs(communitiesQuery);
+      const communities = communityDocs.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setRecommendations(communities as Community[]);
+    } catch (err) {
+      console.log(`handleGetRecommendedCommunities error: `, err);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     handleGetRecommendedCommunities();
   }, []);
@@ -99,6 +119,7 @@ export const Recommendation: React.FC = () => {
                     borderBottom={'1px solid'}
                     borderColor="gray.300"
                     p="10px 12px"
+                    position="relative"
                   >
                     <Flex width={'85%'} align="center">
                       <Flex width="10%">
@@ -131,7 +152,7 @@ export const Recommendation: React.FC = () => {
                         </span>
                       </Flex>
                     </Flex>
-                    <Box>
+                    <Box position="absolute" right="10%">
                       <Button
                         height="22px"
                         fontSize={'8pt'}
@@ -148,6 +169,21 @@ export const Recommendation: React.FC = () => {
                 </Link>
               );
             })}
+
+            {/* one more  */}
+            <Box p="10px 20px">
+              {/* TODO  show all the list here */}
+              <Button
+                height="30px"
+                width="100%"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleShowAll();
+                }}
+              >
+                View All
+              </Button>
+            </Box>
           </>
         )}
       </Flex>

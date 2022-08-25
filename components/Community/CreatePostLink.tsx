@@ -18,7 +18,7 @@ export const CreatePostLink: React.FC<CreatePostProps> = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
   const { handleToggleCommunityMenuOpen } = useDropDirectory();
 
-  const onClick = () => {
+  const handleCreatePost = () => {
     if (!user) {
       setAuthModalState({ open: true, view: 'login' });
       return;
@@ -65,7 +65,7 @@ export const CreatePostLink: React.FC<CreatePostProps> = () => {
         height="36px"
         borderRadius={4}
         mr={4}
-        onClick={onClick}
+        onClick={handleCreatePost}
       />
       <Icon
         as={IoImageOutline}
