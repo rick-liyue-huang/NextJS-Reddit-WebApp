@@ -59,7 +59,7 @@ export const CreateCommunityModal: React.FC<Props> = ({
   const handleCreateCommunity = async () => {
     if (error) setError('');
     // validate the community name
-    const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+    const format = /[ `!@#$%^&*()+\-=[\]{};':"\\|,.<>/?~]/;
     if (format.test(communityName) || communityName.length <= 3) {
       setError(
         'community name character count must be between 3 and 21, and only contains letters, numbers'
