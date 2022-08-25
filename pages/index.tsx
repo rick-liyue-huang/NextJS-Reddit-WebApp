@@ -10,8 +10,9 @@ import {
 import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Post } from '../atoms/postAtom';
+import { Post, PostVote } from '../atoms/postAtom';
 import { CreatePostLink } from '../components/Community/CreatePostLink';
+import { Recommendation } from '../components/Community/Recommendation';
 import { SubLayout } from '../components/Layout/SubLayout';
 import { PostItem } from '../components/Posts/PostItem';
 import { PostLoaderComponent } from '../components/Posts/PostLoaderComponent';
@@ -92,7 +93,30 @@ const Home: NextPage = () => {
     setLoading(false);
   };
 
-  const handleUserPostVoteFeeds = () => {};
+  const handleUserPostVoteFeeds = async () => {
+    setLoading(true);
+    try {
+      const postIds = postStateVal.posts.map((post) => post.id);
+      // get the current user votes
+      const postVoteQuery = query(
+        collection(db, `users/${user?.uid}/postVotes`),
+        where('postId', 'in', postIds)
+      );
+      const postVoteDocs = await getDocs(postVoteQuery);
+      const postVotes = postVoteDocs.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setPostStateVal((prev) => ({
+        ...prev,
+        postVotes: postVotes as PostVote[],
+      }));
+    } catch (err) {
+      console.log(`handleUserPostVoteFeeds error: `, err);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (!user && !userLoading) {
@@ -105,6 +129,18 @@ const Home: NextPage = () => {
       handleBuildUserHomePostFeeds();
     }
   }, [communityStateVal.snippetsFetched]); // don't need to add user dependencies because 'getMyCommunitySnippets' in useCommunities hooks
+
+  useEffect(() => {
+    if (user && postStateVal.postVotes.length) {
+      handleUserPostVoteFeeds();
+    }
+    // return () => {
+    //   setPostStateVal((prev) => ({
+    //     ...prev,
+    //     postVotes: [],
+    //   }));
+    // };
+  }, [user, postStateVal.posts]);
 
   return (
     <SubLayout>
@@ -133,9 +169,14 @@ const Home: NextPage = () => {
           </Stack>
         )}
       </>
-      <>{/* Recommendation */}</>
+      <>
+        {/* Recommendation */}
+        <Recommendation />
+      </>
     </SubLayout>
   );
 };
 
 export default Home;
+
+// https://www.redditstatic.com/desktop2x/img/leaderboard/banner-background.png
