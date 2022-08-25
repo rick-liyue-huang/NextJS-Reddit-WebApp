@@ -172,7 +172,6 @@ export const Recommendation: React.FC = () => {
 
             {/* one more  */}
             <Box p="10px 20px">
-              {/* TODO  show all the list here */}
               <Button
                 height="30px"
                 width="100%"
