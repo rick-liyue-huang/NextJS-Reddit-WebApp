@@ -29,7 +29,7 @@ const communityIdPage: NextPage<Props> = ({ communityData }) => {
       ...prev,
       currentCommunity: communityData,
     }));
-  }, []);
+  }, [communityData]);
 
   return (
     <>

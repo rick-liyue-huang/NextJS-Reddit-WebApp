@@ -53,7 +53,7 @@ export const Posts: React.FC<Props> = ({ communityData }) => {
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [communityData]);
   return (
     <>
       {' '}

@@ -56,6 +56,7 @@ export const useCommunities = () => {
       const newSnippet: CommunitySnippet = {
         communityId: communityData.id,
         imageUrl: communityData.imageUrl || '',
+        isModerator: user?.uid === communityData.creatorId, // match with the 'CommunitiesComponent' part
       };
       batch.set(
         doc(db, `users/${user?.uid}/communitySnippets`, communityData.id),
