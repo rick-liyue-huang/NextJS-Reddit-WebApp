@@ -165,7 +165,7 @@ const Home: NextPage = () => {
                     ?.voteValue
                 }
                 userIsCreator={user?.uid === post.creatorId}
-                homePage // confirm this is home page
+                homePage // confirm this is home page ok
               />
             ))}
           </Stack>
