@@ -5,6 +5,7 @@ import {
   SkeletonText,
   Stack,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 
 import { User } from 'firebase/auth';
@@ -56,6 +57,7 @@ export const CommentsComponent: React.FC<Props> = ({
   const [createLoading, setCreateLoading] = useState(false);
   const setPostStateVal = useSetRecoilState(postState);
   const [deleteCommentIdLoading, setDeleteCommentIdLoading] = useState('');
+  const bg = useColorModeValue('white', 'gray.600');
 
   const handleCreateComment = async () => {
     setCreateLoading(true);
@@ -165,7 +167,7 @@ export const CommentsComponent: React.FC<Props> = ({
   }, [selectedPost]);
 
   return (
-    <Box bg="white" borderRadius={'0 0 4px 4px'} p={2}>
+    <Box bg={bg} borderRadius={'0 0 4px 4px'} p={2}>
       <Flex
         direction={'column'}
         pl={10}

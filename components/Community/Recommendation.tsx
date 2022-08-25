@@ -8,6 +8,7 @@ import {
   SkeletonCircle,
   Stack,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 import Link from 'next/link';
@@ -21,6 +22,7 @@ export const Recommendation: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Community[]>([]);
   const [loading, setLoading] = useState(false);
   const { communityStateVal, handleToggleCommunity } = useCommunities();
+  const bg = useColorModeValue('white', 'gray.600');
 
   const handleGetRecommendedCommunities = async () => {
     setLoading(true);
@@ -70,7 +72,7 @@ export const Recommendation: React.FC = () => {
   return (
     <Flex
       direction={'column'}
-      bg="white"
+      bg={bg}
       // borderRadius={'full'}
       border="1px solid"
       borderColor={'gray.300'}

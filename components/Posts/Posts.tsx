@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Box, Stack, useColorModeValue } from '@chakra-ui/react';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -24,6 +24,7 @@ export const Posts: React.FC<Props> = ({ communityData }) => {
     handleVote,
   } = usePosts();
   const [user] = useAuthState(auth);
+  const bg = useColorModeValue('white', 'gray.600');
 
   const getPosts = async () => {
     setLoading(true);
@@ -55,7 +56,7 @@ export const Posts: React.FC<Props> = ({ communityData }) => {
     getPosts();
   }, [communityData]);
   return (
-    <>
+    <Box bg={bg}>
       {' '}
       {loading ? (
         <PostLoaderComponent />
@@ -77,6 +78,6 @@ export const Posts: React.FC<Props> = ({ communityData }) => {
           ))}
         </Stack>
       )}
-    </>
+    </Box>
   );
 };

@@ -9,6 +9,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
@@ -34,6 +35,7 @@ export const AboutComponent: React.FC<Props> = ({ communityData }) => {
   const { selectedImg, setSelectedImg, handleSelectImg } = useSelectImage();
   const [uploadingImg, setUploadingImg] = useState(false);
   const setCommunityStateVal = useSetRecoilState(communityState);
+  const bg = useColorModeValue('white', 'gray.600');
 
   const handleUploadImg = async () => {
     if (!selectedImg) return;
@@ -65,7 +67,7 @@ export const AboutComponent: React.FC<Props> = ({ communityData }) => {
   };
 
   return (
-    <Box position="sticky" top="14px">
+    <Box position="sticky" top="14px" bg={bg}>
       <Flex
         justify={'space-between'}
         align="center"
@@ -82,8 +84,9 @@ export const AboutComponent: React.FC<Props> = ({ communityData }) => {
       <Flex
         direction="column"
         p={3}
-        bg="white"
-        borderRadius={'8px 8px 4px 4px'}
+        bg={bg}
+        border="1px solid"
+        borderRadius={'0 0 4px 4px'}
       >
         <Stack>
           <Flex width="100%" p={2} fontSize="10pt" fontWeight={700}>

@@ -1,4 +1,11 @@
-import { Alert, AlertIcon, Flex, Icon, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Flex,
+  Icon,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { User } from 'firebase/auth';
 import {
   addDoc,
@@ -63,6 +70,7 @@ export const NewPostForm: React.FC<Props> = ({ user, communityImgUrl }) => {
   const [error, setError] = useState(false);
   const router = useRouter();
   const { selectedImg, setSelectedImg, handleSelectImg } = useSelectImage();
+  const bg = useColorModeValue('white', 'gray.600');
 
   const handleCreatePost = async () => {
     const { communityId } = router.query;
@@ -119,8 +127,8 @@ export const NewPostForm: React.FC<Props> = ({ user, communityImgUrl }) => {
   };
 
   return (
-    <Flex direction="column" bg="white" borderRadius={4} mt={2}>
-      <Flex width="100%">
+    <Flex direction="column" bg={bg} borderRadius={4} mt={2}>
+      <Flex width="100%" borderLeft={'1px solid'}>
         {formTabs.map((tab) => (
           <TabItemComponent
             key={tab.title}

@@ -1,4 +1,11 @@
-import { Button, Flex, Text, Textarea } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  Textarea,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { User } from 'firebase/auth';
 import React from 'react';
 import { AuthButtons } from '../../Navbar/RightContent/AuthButtons';
@@ -18,10 +25,12 @@ export const CommentInputComponent: React.FC<Props> = ({
   user,
   createLoading,
 }) => {
+  const bg = useColorModeValue('white', 'gray.600');
+
   return (
     <Flex direction="column" position="relative">
       {user ? (
-        <>
+        <Box bg={bg}>
           <Text mb={1}>
             Comment as{' '}
             <span style={{ color: '#3182CE' }}>
@@ -39,7 +48,7 @@ export const CommentInputComponent: React.FC<Props> = ({
             _placeholder={{ color: 'gray.500' }}
             _focus={{
               outline: 'none',
-              bg: 'white',
+              bg: bg,
               border: '1px solid black',
             }}
           />
@@ -49,7 +58,6 @@ export const CommentInputComponent: React.FC<Props> = ({
             right={0.1}
             bottom="1px"
             justify="flex-end"
-            bg="gray.100"
             p="6px 8px"
             borderRadius="0px 0px 4px 4px"
           >
@@ -62,7 +70,7 @@ export const CommentInputComponent: React.FC<Props> = ({
               Comment
             </Button>
           </Flex>
-        </>
+        </Box>
       ) : (
         <Flex
           align="center"

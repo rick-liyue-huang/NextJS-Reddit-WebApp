@@ -1,4 +1,11 @@
-import { Button, Flex, Input, Stack, Textarea } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Input,
+  Stack,
+  Textarea,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import React, { ChangeEvent } from 'react';
 
 interface Props {
@@ -19,8 +26,10 @@ export const FormInput: React.FC<Props> = ({
   loading,
   handleCreatePost,
 }) => {
+  const bg = useColorModeValue('white', 'gray.600');
+
   return (
-    <Stack width="100%" spacing={3}>
+    <Stack width="100%" spacing={3} bg={bg}>
       <Input
         name="title"
         value={formInputProps.title}
@@ -31,7 +40,7 @@ export const FormInput: React.FC<Props> = ({
         _placeholder={{ color: 'gray.500' }}
         _focus={{
           outline: 'none',
-          bg: 'white',
+          bg: bg,
           border: '1px solid',
           borderColor: 'gray.500',
         }}
@@ -47,7 +56,7 @@ export const FormInput: React.FC<Props> = ({
         _placeholder={{ color: 'gray.500' }}
         _focus={{
           outline: 'none',
-          bg: 'white',
+          bg: bg,
           border: '1px solid',
           borderColor: 'gray.500',
         }}

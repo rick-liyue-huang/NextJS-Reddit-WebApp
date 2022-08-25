@@ -1,4 +1,11 @@
-import { Button, Flex, Icon, Stack, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Icon,
+  Stack,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -15,6 +22,7 @@ export const PersonalComponent: React.FC = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
   const { handleToggleCommunityMenuOpen } = useDropDirectory();
   const [open, setOpen] = useState(false);
+  const bg = useColorModeValue('white', 'gray.600');
 
   const handleCreatePost = () => {
     if (!user) {
@@ -33,7 +41,7 @@ export const PersonalComponent: React.FC = () => {
   return (
     <Flex
       direction="column"
-      bg="white"
+      bg={bg}
       borderRadius={4}
       cursor="pointer"
       border="1px solid"

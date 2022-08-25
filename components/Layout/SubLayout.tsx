@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
 
 interface Props {
@@ -6,10 +6,11 @@ interface Props {
 }
 
 export const SubLayout: React.FC<Props> = ({ children }) => {
-  console.log(children);
+  // console.log(children);
+  const bg = useColorModeValue('white', 'gray.600');
 
   return (
-    <Flex justify={'center'} p="16px 0">
+    <Flex justify={'center'} p="16px 0" bg={bg}>
       <Flex width={'95%'} justify="center" maxWidth="860px">
         {/* LHS */}
         <Flex

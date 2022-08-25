@@ -8,11 +8,12 @@ import {
   MenuItem,
   MenuList,
   Text,
+  useColorMode,
 } from '@chakra-ui/react';
 import { signOut, User } from 'firebase/auth';
 import React from 'react';
-import { CgProfile } from 'react-icons/cg';
 import { FaRedditSquare } from 'react-icons/fa';
+import { HiSwitchHorizontal } from 'react-icons/hi';
 import { IoSparkles } from 'react-icons/io5';
 import { MdOutlineLogin, MdOutlineLogout } from 'react-icons/md';
 import { VscAccount } from 'react-icons/vsc';
@@ -28,6 +29,7 @@ interface Props {
 export const DropUserMenu: React.FC<Props> = ({ user }) => {
   const setAuthModalState = useSetRecoilState(authModalState);
   const resetCommunityState = useResetRecoilState(communityState);
+  const { toggleColorMode } = useColorMode();
 
   const handleSignOut = async () => {
     await signOut(auth);
@@ -84,10 +86,11 @@ export const DropUserMenu: React.FC<Props> = ({ user }) => {
               fontSize={'10pt'}
               fontWeight={700}
               _hover={{ bg: 'green.500', color: 'white' }}
+              onClick={toggleColorMode}
             >
-              <Flex align="center">
-                <Icon fontSize={20} mr={2} as={CgProfile} />
-                Profile
+              <Flex align="center" cursor="pointer">
+                <Icon fontSize={20} mr={2} as={HiSwitchHorizontal} />
+                Toggle Mode
               </Flex>
             </MenuItem>
             <MenuDivider />

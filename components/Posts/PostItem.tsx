@@ -8,6 +8,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import moment from 'moment';
 import Link from 'next/link';
@@ -54,6 +55,7 @@ export const PostItem: React.FC<Props> = ({
   const [error, setError] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const router = useRouter();
+  const bg = useColorModeValue('white', 'gray.600');
 
   const singlePost = !handleSelectPost;
 
@@ -85,7 +87,7 @@ export const PostItem: React.FC<Props> = ({
   return (
     <Flex
       border="1px solid"
-      bg="white"
+      bg={bg}
       borderColor={singlePost ? 'white' : 'gray.300'}
       borderRadius={singlePost ? '4px 4px 0px 0px' : 4}
       _hover={{ borderColor: singlePost ? 'none' : 'gray.500' }}
@@ -95,7 +97,7 @@ export const PostItem: React.FC<Props> = ({
       <Flex
         direction={'column'}
         align="center"
-        bg={singlePost ? 'none' : 'gray.100'}
+        bg={singlePost ? 'none' : 'orange.300'}
         p={2}
         width="40px"
         borderRadius={singlePost ? '0' : '4px 0 0 4px'}
@@ -104,7 +106,7 @@ export const PostItem: React.FC<Props> = ({
           as={
             userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
           }
-          color={userVoteValue === 1 ? 'green.500' : 'gray.400'}
+          color={userVoteValue === 1 ? 'green.500' : 'gray.100'}
           fontSize={22}
           cursor="pointer"
           // @ts-ignore
@@ -117,7 +119,7 @@ export const PostItem: React.FC<Props> = ({
               ? IoArrowDownCircleSharp
               : IoArrowDownCircleOutline
           }
-          color={userVoteValue === -1 ? 'green.500' : 'gray.400'}
+          color={userVoteValue === -1 ? 'green.500' : 'gray.100'}
           fontSize={22}
           cursor="pointer"
           // @ts-ignore

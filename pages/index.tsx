@@ -1,4 +1,9 @@
-import { Stack } from '@chakra-ui/react';
+import {
+  Button,
+  Stack,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import {
   collection,
   getDocs,
@@ -34,6 +39,10 @@ const Home: NextPage = () => {
   } = usePosts();
   // const communityStateVal = useRecoilValue(communityState);
   const { communityStateVal } = useCommunities();
+
+  //  toggle chakra-ui mode
+  const { toggleColorMode } = useColorMode();
+  const bg = useColorModeValue('white', 'gray.600');
 
   const handleBuildUserHomePostFeeds = async () => {
     setLoading(true);
@@ -171,8 +180,9 @@ const Home: NextPage = () => {
           </Stack>
         )}
       </>
-      <Stack spacing={3}>
+      <Stack spacing={3} bg={bg}>
         {/* Recommendation */}
+        <Button onClick={toggleColorMode}>Toggle Mode</Button>
         <Recommendation />
         <PremiumComponent />
         <PersonalComponent />

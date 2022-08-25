@@ -1,14 +1,16 @@
-import { Flex, Icon } from '@chakra-ui/react';
+import { Flex, Icon, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 import { BsArrowRightCircle, BsChatDots } from 'react-icons/bs';
-import { GrAdd } from 'react-icons/gr';
 import {
+  IoAddSharp,
   IoFilterCircleOutline,
   IoNotificationsOutline,
   IoVideocamOffOutline,
 } from 'react-icons/io5';
 
 export const IconsComponent: React.FC = () => {
+  const color = useColorModeValue('gray.600', 'white');
+
   return (
     <Flex>
       <Flex
@@ -78,7 +80,7 @@ export const IconsComponent: React.FC = () => {
           _hover={{ bg: 'gray.200' }}
           display={{ base: 'none', md: 'flex' }}
         >
-          <Icon as={GrAdd} fontSize={20} />
+          <Icon as={IoAddSharp} fontSize={22} />
         </Flex>
       </>
     </Flex>
