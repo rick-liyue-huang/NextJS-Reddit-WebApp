@@ -11,11 +11,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({ user }) => {
   return (
     <Flex flexGrow={1} maxWidth={user ? 'auto' : '680px'} mr={2} align="center">
       <InputGroup>
-        <InputLeftElement
-          pointerEvents="none"
-          children={<SearchIcon color="gray.300" />}
-          mb={1}
-        />
+        <InputLeftElement pointerEvents="none" mb={1}>
+          <SearchIcon color="gray.300" />
+        </InputLeftElement>
         <Input
           placeholder="Search something..."
           fontSize={'10pt'}

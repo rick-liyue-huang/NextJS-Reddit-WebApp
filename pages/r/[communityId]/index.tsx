@@ -16,13 +16,9 @@ interface Props {
   communityData: Community; // it is global so setting in atom
 }
 
-const communityIdPage: NextPage<Props> = ({ communityData }) => {
+const CommunityIdPage: NextPage<Props> = ({ communityData }) => {
   // console.log(communityData);
   const setCommunityStateVal = useSetRecoilState(communityState);
-
-  if (!communityData) {
-    return <NotFound />;
-  }
 
   useEffect(() => {
     setCommunityStateVal((prev) => ({
@@ -30,6 +26,10 @@ const communityIdPage: NextPage<Props> = ({ communityData }) => {
       currentCommunity: communityData,
     }));
   }, [communityData]);
+
+  if (!communityData) {
+    return <NotFound />;
+  }
 
   return (
     <>
@@ -47,7 +47,7 @@ const communityIdPage: NextPage<Props> = ({ communityData }) => {
   );
 };
 
-export default communityIdPage;
+export default CommunityIdPage;
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
