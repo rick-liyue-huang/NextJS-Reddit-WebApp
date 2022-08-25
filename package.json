@@ -23,6 +23,8 @@
     "@fontsource/open-sans": "^4.5.11",
     "@fontsource/raleway": "^4.5.10",
     "firebase": "^9.9.2",
+    "firebase-admin": "^11.0.1",
+    "firebase-functions": "^3.22.0",
     "framer-motion": "^6",
     "moment": "^2.29.4",
     "next": "12.2.5",
