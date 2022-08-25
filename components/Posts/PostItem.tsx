@@ -10,10 +10,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import moment from 'moment';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { MouseEvent, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
-import { BsChat } from 'react-icons/bs';
+import { BsChat, BsDot } from 'react-icons/bs';
+import { FaReddit } from 'react-icons/fa';
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
@@ -36,6 +38,7 @@ interface Props {
   ) => void;
   handleRemovePost: (post: Post) => Promise<boolean>;
   handleSelectPost?: (post: Post) => void;
+  homePage?: boolean; // confirm to render postItem in home page or not
 }
 
 export const PostItem: React.FC<Props> = ({
@@ -45,6 +48,7 @@ export const PostItem: React.FC<Props> = ({
   handleVote,
   handleRemovePost,
   handleSelectPost,
+  homePage,
 }) => {
   const [loadingImg, setLoadingImg] = useState(true);
   const [error, setError] = useState(false);
@@ -123,6 +127,29 @@ export const PostItem: React.FC<Props> = ({
       <Flex direction={'column'} width="100%">
         <Stack spacing={1} p="10px">
           <Stack direction="row" spacing="0.5" align={'center'} fontSize="9pt">
+            {/* check home page  */}
+            {homePage && (
+              <>
+                {post.communityImageUrl ? (
+                  <Image
+                    src={post.communityImageUrl}
+                    borderRadius="full"
+                    boxSize="18px"
+                    mr={2}
+                  />
+                ) : (
+                  <Icon as={FaReddit} fontSize="18pt" color="green.500" />
+                )}
+                <Link href={`r/${post.communityId}`}>
+                  <Text
+                    fontWeight={700}
+                    _hover={{ textDecoration: 'underline' }}
+                    onClick={(e) => e.stopPropagation()}
+                  >{`r/${post.communityId}`}</Text>
+                </Link>
+                <Icon as={BsDot} color="gray.400" fontSize={'8px'} />
+              </>
+            )}
             <Text>
               Posted by u/{post.creatorDisplayName}
               {' - '}

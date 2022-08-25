@@ -21,7 +21,12 @@ const SubmitPost: NextPage = () => {
           <Text>Create A Post</Text>
         </Box>
         {/* <NewPostForm /> */}
-        {user && <NewPostForm user={user} />}
+        {user && (
+          <NewPostForm
+            user={user}
+            communityImgUrl={communityStateVal?.currentCommunity?.imageUrl}
+          />
+        )}
       </>
       <>
         {/* <AboutComponent />   */}

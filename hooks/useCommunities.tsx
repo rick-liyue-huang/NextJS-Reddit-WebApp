@@ -119,6 +119,7 @@ export const useCommunities = () => {
       setCommunityStateVal((prev) => ({
         ...prev,
         mySnippets: snippets as CommunitySnippet[],
+        snippetsFetched: true, // match with useEffect in 'index.tsx' homepage
       }));
 
       console.log('snippets: ', snippets);
@@ -152,10 +153,11 @@ export const useCommunities = () => {
       setCommunityStateVal((prev) => ({
         ...prev,
         mySnippets: [],
+        snippetsFetched: false,
       }));
       return;
     }
-    getMyCommunitySnippets();
+    getMyCommunitySnippets(); // user sign in already, and trigger the snippetsFetched to true
   }, [user]);
 
   useEffect(() => {

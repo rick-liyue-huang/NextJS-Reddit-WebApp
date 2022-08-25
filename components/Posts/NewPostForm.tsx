@@ -50,9 +50,10 @@ const formTabs: TabItem[] = [
 
 interface Props {
   user: User;
+  communityImgUrl?: string;
 }
 
-export const NewPostForm: React.FC<Props> = ({ user }) => {
+export const NewPostForm: React.FC<Props> = ({ user, communityImgUrl }) => {
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInput, setTextInput] = useState({
     title: '',
@@ -75,6 +76,7 @@ export const NewPostForm: React.FC<Props> = ({ user }) => {
       numberOfComments: 0,
       voteStatus: 0,
       createdAt: serverTimestamp() as Timestamp,
+      communityImageUrl: communityImgUrl || '',
     };
 
     setLoading(true);

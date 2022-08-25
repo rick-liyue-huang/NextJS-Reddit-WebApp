@@ -16,11 +16,13 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import React, { ChangeEvent, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { BsFillEyeFill, BsFillPersonFill } from 'react-icons/bs';
 import { HiLockClosed } from 'react-icons/hi';
 import { auth, db } from '../../../firebase/clientConfig';
+import { useDropDirectory } from '../../../hooks/useDropDirectory';
 
 interface Props {
   open: boolean;
@@ -37,6 +39,8 @@ export const CreateCommunityModal: React.FC<Props> = ({
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [user] = useAuthState(auth);
+  const router = useRouter();
+  const { handleToggleCommunityMenuOpen } = useDropDirectory();
 
   const handlCommunityName = (e: ChangeEvent<HTMLInputElement>) => {
     // setCommunityName('');
@@ -96,6 +100,9 @@ export const CreateCommunityModal: React.FC<Props> = ({
           }
         );
       });
+      handleClose();
+      handleToggleCommunityMenuOpen();
+      router.push(`r/${communityName}`);
     } catch (e: any) {
       console.log(`const handleCreateCommunity error: ${e}`);
       console.log(e.message);
