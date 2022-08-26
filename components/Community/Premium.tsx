@@ -6,13 +6,34 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { GiCheckedShield } from 'react-icons/gi';
+import { useSetRecoilState } from 'recoil';
+import { authModalState } from '../../atoms/authModalAtom';
+import { auth } from '../../firebase/clientConfig';
 
 export const PremiumComponent: React.FC = () => {
   const bg = useColorModeValue('white', 'gray.600');
+  const [user] = useAuthState(auth);
+  const setAuthModalState = useSetRecoilState(authModalState);
+  const router = useRouter();
 
-  const handleLocateStripe = () => {};
+  console.log('user: ', user);
+
+  const handleLocateStripe = () => {
+    if (!user) {
+      setAuthModalState((prev) => ({
+        ...prev,
+        open: true,
+        view: 'login',
+      }));
+      return;
+    }
+
+    router.push('/plans');
+  };
   return (
     <Flex
       direction="column"

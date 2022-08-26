@@ -20,6 +20,8 @@ export const Navbar: React.FC = () => {
       height="46px"
       padding="6px 12px"
       justify={{ md: 'space-between' }}
+      borderBottom="1px solid"
+      borderColor="gray.300"
     >
       {/* Logo */}
       <Flex
