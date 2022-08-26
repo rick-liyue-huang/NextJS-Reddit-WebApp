@@ -13,29 +13,21 @@ import { FaReddit } from 'react-icons/fa';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../atoms/authModalAtom';
 import { auth } from '../../firebase/clientConfig';
-import { useDropDirectory } from '../../hooks/useDropDirectory';
 import { CreateCommunityModal } from '../modal/Community/CreateCommunityModal';
 
-export const PersonalComponent: React.FC = () => {
+export const AccountManagement: React.FC = () => {
   const router = useRouter();
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
-  const { handleToggleCommunityMenuOpen } = useDropDirectory();
   const [open, setOpen] = useState(false);
   const bg = useColorModeValue('white', 'gray.600');
 
-  const handleCreatePost = () => {
+  const handleLocateManagement = () => {
     if (!user) {
       setAuthModalState({ open: true, view: 'login' });
       return;
     }
-    const { communityId } = router.query;
-
-    if (communityId) {
-      router.push(`/r/${communityId}/submit`);
-      return;
-    }
-    handleToggleCommunityMenuOpen();
+    router.push('/plans/management');
   };
 
   return (
@@ -63,27 +55,12 @@ export const PersonalComponent: React.FC = () => {
       <Flex direction="column" p="12px">
         <Flex align="center" mb={2}>
           <Icon as={FaReddit} fontSize={50} color="green.500" mr={2} />
-          <Text fontWeight={600}>Personal Likes</Text>
+          <Text fontWeight={600}>Subscription</Text>
         </Flex>
         <Stack spacing={3}>
-          <Text fontSize="9pt">
-            Your personal Reddit frontpage, built for you.
-          </Text>
-          <Button height="30px" onClick={handleCreatePost}>
-            Create Post
-          </Button>
-          <Button
-            variant="outline"
-            height="30px"
-            onClick={() => {
-              if (!user) {
-                setAuthModalState({ open: true, view: 'login' });
-                return;
-              }
-              setOpen(true);
-            }}
-          >
-            Create Community
+          <Text fontSize="9pt">Want some different quality?</Text>
+          <Button height="30px" onClick={handleLocateManagement}>
+            Change Subscription
           </Button>
         </Stack>
       </Flex>

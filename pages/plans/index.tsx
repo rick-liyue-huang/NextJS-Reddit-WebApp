@@ -16,18 +16,20 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { getProducts, Product } from '@stripe/firestore-stripe-payments';
+import { User } from 'firebase/auth';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useSetRecoilState } from 'recoil';
-import { authModalState } from '../atoms/authModalAtom';
-import { PersonalComponent } from '../components/Community/PersonalComponent';
-import { Recommendation } from '../components/Community/Recommendation';
-import { SubLayout } from '../components/Layout/SubLayout';
-import { auth } from '../firebase/clientConfig';
-import { loadCheckout, payments } from '../stripe';
+import { authModalState } from '../../atoms/authModalAtom';
+import { Recommendation } from '../../components/Community/Recommendation';
+import { SubLayout } from '../../components/Layout/SubLayout';
+import { AccountManagement } from '../../components/Premium/AccountManagement';
+import { auth } from '../../firebase/clientConfig';
+import { useSubscription } from '../../hooks/useSubscription';
+import { loadCheckout, payments } from '../../stripe';
 
 interface Props {
   products: Product[];
@@ -41,6 +43,10 @@ const PlanPage: NextPage<Props> = ({ products }) => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
   const router = useRouter();
+  // get the current subed plan under current user,
+  const { subscription } = useSubscription(user as User);
+
+  console.log('subscription: ', subscription);
 
   // console.log('selectedPan : ', selectedPlan);
 
@@ -134,14 +140,14 @@ const PlanPage: NextPage<Props> = ({ products }) => {
             disabled={!selectedPlan || isBillingLoading}
             onClick={handleToSubscription}
           >
-            {isBillingLoading ? <Spinner size="sm" /> : 'Subscribe Plan'}
+            {isBillingLoading ? <Spinner size="sm" /> : <>Subscribe Plan</>}
           </Button>
         </>
         <Stack spacing={3} bg={bg}>
           {/* Recommendation */}
           <Button onClick={toggleColorMode}>Toggle Mode</Button>
           <Recommendation />
-          <PersonalComponent />
+          <AccountManagement />
         </Stack>
       </SubLayout>
     </div>

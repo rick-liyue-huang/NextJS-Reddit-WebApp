@@ -18,3 +18,7 @@ export const loadCheckout = async (priceId: string) => {
     .then((snapshot) => window.location.assign(snapshot.url)) // will go to the subscription page
     .catch((err) => console.log(`loadCheckout error: `, err.message));
 };
+
+// export const handleToBillingPortal = async () => {
+//   const instance
+// };
