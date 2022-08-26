@@ -22,6 +22,12 @@ add 'Run Payments with Stripe' extension on firebase, click next and add 'Stripe
 
 after install extension, follow 'How this extension works'.
 
+add url to webhook for customer subscription messages. and add some events and then click add endpoint to get webhook secret. copy 'Signing secret' from stripe.com to 'Stripe webhook secret' on firebase extension configuration page. By now, the firebase extension connect with stripe.com .
+
+and then add products in Products tab in stripe.com, it will produce the products collection in firebase.
+
+REMEMBER TO ADD 'next-transpile-modules' after install stripe, and modify the next.config.js
+
 stripe.com api key
 
 `pk_test_51LapJtBBo5ALuLjHlqbB3lRhLDCMxA74if2L9TiOKrH5nqm3qYgaHleBdMiwex9PJtRdQ96ofttwfsaNgqQiHxE500a8fpAjmw`
