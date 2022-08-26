@@ -2,6 +2,7 @@ import {
   createCheckoutSession,
   getStripePayments,
 } from '@stripe/firestore-stripe-payments';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '../firebase/clientConfig';
 
 export const payments = getStripePayments(app, {
@@ -19,6 +20,19 @@ export const loadCheckout = async (priceId: string) => {
     .catch((err) => console.log(`loadCheckout error: `, err.message));
 };
 
-// export const handleToBillingPortal = async () => {
-//   const instance
-// };
+export const handleToBillingPortal = async () => {
+  const instance = getFunctions(app, 'australia-southeast1');
+  const functionRef = httpsCallable(
+    instance,
+    'ext-firestore-stripe-payments-createPortalLink'
+  );
+
+  await functionRef({
+    returnUrl: `${window.location.origin}/plans/management`,
+  })
+    .then(({ data }: any) => {
+      window.location.assign(data.url);
+      // router.push('/plans/management');
+    })
+    .catch((err) => console.log(err.message));
+};

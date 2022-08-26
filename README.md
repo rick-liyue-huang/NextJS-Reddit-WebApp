@@ -28,6 +28,18 @@ and then add products in Products tab in stripe.com, it will produce the product
 
 REMEMBER TO ADD 'next-transpile-modules' after install stripe, and modify the next.config.js
 
+## AFTER 'handleManageSubscription' in stripe/index
+
+Set your custom branding in the settings.
+Configure the Customer Portal settings.
+Toggle on “Allow customers to update their payment methods”.
+Toggle on “Allow customers to update subscriptions”.
+Toggle on “Allow customers to cancel subscriptions”.
+Add the products and prices that you want to allow customer to switch between.
+Set up the required business information and links.
+
+---
+
 stripe.com api key
 
 `pk_test_51LapJtBBo5ALuLjHlqbB3lRhLDCMxA74if2L9TiOKrH5nqm3qYgaHleBdMiwex9PJtRdQ96ofttwfsaNgqQiHxE500a8fpAjmw`

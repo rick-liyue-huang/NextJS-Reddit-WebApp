@@ -128,7 +128,7 @@ export const NewPostForm: React.FC<Props> = ({ user, communityImgUrl }) => {
 
   return (
     <Flex direction="column" bg={bg} borderRadius={4} mt={2}>
-      <Flex width="100%" borderLeft={'1px solid'}>
+      <Flex width="100%" borderLeft={'1px solid'} borderColor="gray.50">
         {formTabs.map((tab) => (
           <TabItemComponent
             key={tab.title}

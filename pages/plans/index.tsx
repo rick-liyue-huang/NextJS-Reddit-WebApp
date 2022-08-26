@@ -19,7 +19,6 @@ import { getProducts, Product } from '@stripe/firestore-stripe-payments';
 import { User } from 'firebase/auth';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useSetRecoilState } from 'recoil';
@@ -42,7 +41,6 @@ const PlanPage: NextPage<Props> = ({ products }) => {
   const [isBillingLoading, setIsBillingLoading] = useState(false);
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
-  const router = useRouter();
   // get the current subed plan under current user,
   const { subscription } = useSubscription(user as User);
 

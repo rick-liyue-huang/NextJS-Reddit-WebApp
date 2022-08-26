@@ -6,6 +6,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { User } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -13,12 +14,14 @@ import { GiCheckedShield } from 'react-icons/gi';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../atoms/authModalAtom';
 import { auth } from '../../firebase/clientConfig';
+import { useSubscription } from '../../hooks/useSubscription';
 
 export const PremiumComponent: React.FC = () => {
   const bg = useColorModeValue('white', 'gray.600');
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
   const router = useRouter();
+  const { subscription } = useSubscription(user as User);
 
   console.log('user: ', user);
 
@@ -51,9 +54,19 @@ export const PremiumComponent: React.FC = () => {
           <Text>The best Reddit experience, with monthly Coins</Text>
         </Stack>
       </Flex>
-      <Button height="30px" bg="orange.300" onClick={handleLocateStripe}>
-        Try Now
-      </Button>
+      {subscription ? (
+        <Button
+          height="30px"
+          bg="orange.300"
+          onClick={() => router.push('/plans/management')}
+        >
+          Plan Details
+        </Button>
+      ) : (
+        <Button height="30px" bg="orange.300" onClick={handleLocateStripe}>
+          Try Now
+        </Button>
+      )}
     </Flex>
   );
 };
